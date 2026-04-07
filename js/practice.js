@@ -56,6 +56,18 @@ export function renderPractice() {
     return;
   }
 
+  // Question image
+  const imgWrap = document.getElementById('pqImgWrap');
+  const img = document.getElementById('pqImg');
+  if (q.image) {
+    img.src = '/images/questions/' + q.image;
+    img.alt = q.text;
+    imgWrap.style.display = '';
+  } else {
+    imgWrap.style.display = 'none';
+    img.src = '';
+  }
+
   // Question text
   document.getElementById('pqText').textContent = q.text;
 

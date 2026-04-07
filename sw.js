@@ -1,4 +1,4 @@
-const CACHE = 'ebt-v1';
+const CACHE = 'ebt-v2';
 const ASSETS = [
   '/',
   '/index.html',
@@ -11,6 +11,19 @@ const ASSETS = [
   '/js/overview.js',
   '/js/data/questions.js',
   '/manifest.json',
+  '/images/questions/general_21_question.png',
+  '/images/questions/general_55_question.jpg',
+  '/images/questions/general_70_question.png',
+  '/images/questions/general_130_question.png',
+  '/images/questions/general_176_question.png',
+  '/images/questions/general_181_question.jpg',
+  '/images/questions/general_187_question.png',
+  '/images/questions/general_209_question.png',
+  '/images/questions/general_216_question.jpg',
+  '/images/questions/general_226_question.png',
+  '/images/questions/general_235_question.jpg',
+  '/images/questions/berlin_1_question.png',
+  '/images/questions/berlin_8_question.png',
 ];
 
 self.addEventListener('install', e => {
