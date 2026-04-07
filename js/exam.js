@@ -13,6 +13,15 @@ let examAnswers = [];
 let examCurrent = 0;
 let examActive = false;
 
+// Escape text for safe DOM insertion
+function esc(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 function shuffle(arr) {
   return arr.slice().sort(() => Math.random() - 0.5);
 }
@@ -116,16 +125,15 @@ function finishExam() {
   // Detailed review
   const revWrap = document.getElementById('examReview');
   revWrap.innerHTML = review.map(({ q, chosen, right }, i) => {
-    const letters = ['A', 'B', 'C', 'D'];
-    const chosenText = chosen !== null ? q.options[chosen] : '(keine Antwort)';
+    const chosenText = chosen !== null ? esc(q.options[chosen]) : '(keine Antwort)';
     return `<div class="rev-item ${right ? 'rev-right' : 'rev-wrong'}">
-      <div class="rev-num">Frage ${i + 1} <span class="rev-cat">${q.cat}</span></div>
-      <div class="rev-text">${q.text}</div>
+      <div class="rev-num">Frage ${i + 1} <span class="rev-cat">${esc(q.cat)}</span></div>
+      <div class="rev-text">${esc(q.text)}</div>
       <div class="rev-answer">
         ${right
           ? `<span class="rev-correct">✓ ${chosenText}</span>`
           : `<span class="rev-incorrect">✗ Deine Antwort: ${chosenText}</span>
-             <span class="rev-correct">✓ Richtig: ${q.options[q.answer]}</span>`
+             <span class="rev-correct">✓ Richtig: ${esc(q.options[q.answer])}</span>`
         }
       </div>
     </div>`;

@@ -146,9 +146,15 @@ export function initPractice() {
   // Build filter buttons
   const wrap = document.getElementById('practiceFilters');
   const cats = ['Alle', 'Demokratie', 'Geschichte', 'Gesellschaft', 'Europa', 'Bundesland'];
-  wrap.innerHTML = cats.map(c =>
-    `<button class="filter-btn${c === S.practiceFilter ? ' active' : ''}" data-cat="${c}" onclick="setPracticeFilter('${c}')">${c}</button>`
-  ).join('');
+  wrap.innerHTML = '';
+  cats.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (c === S.practiceFilter ? ' active' : '');
+    btn.dataset.cat = c;
+    btn.textContent = c;
+    btn.addEventListener('click', () => setPracticeFilter(c));
+    wrap.appendChild(btn);
+  });
 
   buildPracticeDeck();
   renderPractice();

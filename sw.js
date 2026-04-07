@@ -27,6 +27,11 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request))
+    caches.match(e.request)
+      .then(cached => cached || fetch(e.request))
+      .catch(() => new Response('Offline – bitte später erneut versuchen.', {
+        status: 503,
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+      }))
   );
 });
