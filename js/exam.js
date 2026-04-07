@@ -1,0 +1,147 @@
+// Mock Exam mode — 33 random questions (30 general + 3 state-specific), score at end
+
+import { S, save } from './state.js';
+import { QUESTIONS, STATE_QUESTIONS } from './data/questions.js';
+
+const EXAM_TOTAL = 33;
+const EXAM_GENERAL = 30;
+const EXAM_STATE = 3;
+const PASS_SCORE = 17;
+
+let examDeck = [];
+let examAnswers = [];
+let examCurrent = 0;
+let examActive = false;
+
+function shuffle(arr) {
+  return arr.slice().sort(() => Math.random() - 0.5);
+}
+
+export function startExam() {
+  // Build 30 general + 3 state questions
+  const general = shuffle(QUESTIONS).slice(0, EXAM_GENERAL);
+  const statePool = STATE_QUESTIONS[S.state] || [];
+  const stateQ = shuffle(statePool).slice(0, Math.min(EXAM_STATE, statePool.length))
+    .map((q, i) => ({ ...q, id: 'bl_' + i, cat: 'Bundesland' }));
+
+  examDeck = shuffle([...general, ...stateQ]);
+  examAnswers = new Array(examDeck.length).fill(null);
+  examCurrent = 0;
+  examActive = true;
+
+  document.getElementById('examIntro').style.display = 'none';
+  document.getElementById('examQuiz').style.display = '';
+  document.getElementById('examResult').style.display = 'none';
+
+  renderExamQ();
+}
+
+function renderExamQ() {
+  const q = examDeck[examCurrent];
+  const total = examDeck.length;
+
+  document.getElementById('eqCounter').textContent = `Frage ${examCurrent + 1} / ${total}`;
+  document.getElementById('eqProg').style.width = (examCurrent / total * 100) + '%';
+  document.getElementById('eqText').textContent = q.text;
+  document.getElementById('eqCat').textContent = q.cat;
+
+  const wrap = document.getElementById('eqOptions');
+  wrap.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn' + (examAnswers[examCurrent] === i ? ' opt-selected' : '');
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span class="opt-text">${opt}</span>`;
+    btn.onclick = () => selectExamAnswer(i);
+    wrap.appendChild(btn);
+  });
+
+  document.getElementById('examPrevBtn').style.display = examCurrent > 0 ? '' : 'none';
+  document.getElementById('examNextBtn').textContent = examCurrent < total - 1 ? 'Weiter →' : 'Auswerten';
+}
+
+function selectExamAnswer(chosen) {
+  examAnswers[examCurrent] = chosen;
+  document.querySelectorAll('#eqOptions .opt-btn').forEach((btn, i) => {
+    btn.classList.toggle('opt-selected', i === chosen);
+  });
+}
+
+export function examPrev() {
+  if (examCurrent > 0) {
+    examCurrent--;
+    renderExamQ();
+  }
+}
+
+export function examNext() {
+  if (examCurrent < examDeck.length - 1) {
+    examCurrent++;
+    renderExamQ();
+  } else {
+    finishExam();
+  }
+}
+
+function finishExam() {
+  examActive = false;
+  const total = examDeck.length;
+  let score = 0;
+  const review = [];
+
+  examDeck.forEach((q, i) => {
+    const chosen = examAnswers[i];
+    const right = chosen === q.answer;
+    if (right) score++;
+    review.push({ q, chosen, right });
+  });
+
+  S.examDone++;
+  if (score > S.examBest) S.examBest = score;
+  save();
+
+  // Show result
+  document.getElementById('examQuiz').style.display = 'none';
+  document.getElementById('examResult').style.display = '';
+
+  const passed = score >= PASS_SCORE;
+  document.getElementById('examScore').textContent = `${score} / ${total}`;
+  document.getElementById('examVerdict').textContent = passed
+    ? '🎉 Bestanden! (≥ 17 richtig)'
+    : `❌ Nicht bestanden (< 17 richtig)`;
+  document.getElementById('examVerdict').className = 'exam-verdict ' + (passed ? 'verdict-pass' : 'verdict-fail');
+  document.getElementById('examBest').textContent = `Bisher bestes Ergebnis: ${S.examBest} / ${total}`;
+  document.getElementById('examCount').textContent = `Prüfungssimulationen gesamt: ${S.examDone}`;
+
+  // Detailed review
+  const revWrap = document.getElementById('examReview');
+  revWrap.innerHTML = review.map(({ q, chosen, right }, i) => {
+    const letters = ['A', 'B', 'C', 'D'];
+    const chosenText = chosen !== null ? q.options[chosen] : '(keine Antwort)';
+    return `<div class="rev-item ${right ? 'rev-right' : 'rev-wrong'}">
+      <div class="rev-num">Frage ${i + 1} <span class="rev-cat">${q.cat}</span></div>
+      <div class="rev-text">${q.text}</div>
+      <div class="rev-answer">
+        ${right
+          ? `<span class="rev-correct">✓ ${chosenText}</span>`
+          : `<span class="rev-incorrect">✗ Deine Antwort: ${chosenText}</span>
+             <span class="rev-correct">✓ Richtig: ${q.options[q.answer]}</span>`
+        }
+      </div>
+    </div>`;
+  }).join('');
+}
+
+export function examReset() {
+  examActive = false;
+  document.getElementById('examIntro').style.display = '';
+  document.getElementById('examQuiz').style.display = 'none';
+  document.getElementById('examResult').style.display = 'none';
+
+  // Update state name in intro
+  document.getElementById('examStateName').textContent = S.state;
+}
+
+export function initExam() {
+  examReset();
+}

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0f0f13">
+  <meta name="description" content="Übe für den deutschen Einbürgerungstest (Leben in Deutschland) – 310 offizielle Fragen, Prüfungssimulation und Fortschrittsverfolgung">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="stylesheet" href="/css/style.css">
+  <title>Einbürgerungstest Übung</title>
+</head>
+<body>
+
+<header>
+  <span class="de-flag">🇩🇪</span>
+  <h1>Einbürgerungstest</h1>
+</header>
+
+<!-- ═══════════════════════════════════ OVERVIEW ═══════════════════════════════════ -->
+<section id="overview" class="section">
+  <p class="section-subtitle">
+    Dein Bundesland bestimmt, welche länderspezifischen Fragen in der Prüfungssimulation
+    und im Übungsmodus erscheinen.
+  </p>
+
+  <!-- State selector -->
+  <div class="card">
+    <div class="state-selector-wrap">
+      <span class="state-label">🗺️ Dein Bundesland</span>
+      <select id="stateSelect"></select>
+    </div>
+  </div>
+
+  <!-- Progress stats -->
+  <div class="card">
+    <div class="section-title">📊 Fortschritt</div>
+    <div class="ov-progbar"><div id="ovProgFill" class="ov-progfill" style="width:0%"></div></div>
+    <p class="ov-pct"><span id="ovPct">0%</span> geübt · <span id="ovCorrectPct">0%</span> richtig beantwortet</p>
+    <div class="ov-grid" style="margin-top:.85rem">
+      <div class="ov-box">
+        <div class="ov-val" id="ovCorrect">0</div>
+        <div class="ov-label">✓ Richtig</div>
+      </div>
+      <div class="ov-box">
+        <div class="ov-val" id="ovIncorrect">0</div>
+        <div class="ov-label">✗ Falsch</div>
+      </div>
+      <div class="ov-box">
+        <div class="ov-val" id="ovDone">0</div>
+        <div class="ov-label">Geübt</div>
+      </div>
+      <div class="ov-box">
+        <div class="ov-val" id="ovTotal">300</div>
+        <div class="ov-label">Gesamtfragen</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exam stats -->
+  <div class="card">
+    <div class="section-title">🎓 Prüfungssimulationen</div>
+    <div class="ov-grid">
+      <div class="ov-box">
+        <div class="ov-val" id="ovExamDone">0</div>
+        <div class="ov-label">Absolviert</div>
+      </div>
+      <div class="ov-box">
+        <div class="ov-val" id="ovExamBest">— / 33</div>
+        <div class="ov-label">Bestes Ergebnis</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- About -->
+  <div class="card">
+    <div class="section-title">ℹ️ Über den Test</div>
+    <p style="font-size:.88rem;color:var(--muted);line-height:1.7">
+      Der Einbürgerungstest umfasst <strong style="color:var(--text)">310 Fragen</strong>
+      (300 allgemeine + 10 länderspezifische je Bundesland).
+      In der echten Prüfung werden <strong style="color:var(--text)">33 Fragen</strong>
+      gestellt (30 allgemeine + 3 länderspezifische).
+      Zum Bestehen sind mindestens
+      <strong style="color:var(--text)">17 richtige Antworten</strong> notwendig.
+    </p>
+  </div>
+
+  <hr class="divider">
+  <button class="btn btn-danger" style="width:100%" onclick="confirmReset()">
+    Fortschritt zurücksetzen
+  </button>
+</section>
+
+<!-- ═══════════════════════════════════ PRACTICE ═══════════════════════════════════ -->
+<section id="practice" class="section">
+  <div id="practiceFilters" class="filters"></div>
+
+  <div class="card">
+    <div class="pq-header">
+      <span class="pq-counter" id="pqCounter"></span>
+      <span class="pq-cat" id="pqCat"></span>
+    </div>
+    <div class="pq-progbar"><div id="pqProg" class="pq-progfill" style="width:0%"></div></div>
+    <p class="pq-text" id="pqText">Lade Fragen…</p>
+    <div id="pqOptions"></div>
+    <div id="pqFeedback" class="pq-feedback"></div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="practiceSkip()">Überspringen</button>
+      <button class="btn btn-primary" id="pqNextBtn" style="display:none" onclick="practiceNext()">Weiter →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ EXAM ═══════════════════════════════════ -->
+<section id="exam" class="section">
+
+  <!-- Intro -->
+  <div id="examIntro">
+    <div class="card">
+      <h2>🎓 Prüfungssimulation</h2>
+      <p style="margin-top:.5rem">Simuliere die echte Prüfung mit 33 zufälligen Fragen.</p>
+      <div class="exam-info-grid">
+        <div class="exam-info-box">
+          <div class="ei-val">33</div>
+          <div class="ei-label">Fragen gesamt</div>
+        </div>
+        <div class="exam-info-box">
+          <div class="ei-val">17</div>
+          <div class="ei-label">Zum Bestehen</div>
+        </div>
+        <div class="exam-info-box">
+          <div class="ei-val">30</div>
+          <div class="ei-label">Allgemein</div>
+        </div>
+        <div class="exam-info-box">
+          <div class="ei-val">3</div>
+          <div class="ei-label">Bundesland</div>
+        </div>
+      </div>
+      <p class="exam-state-note">
+        Länderfragen für: <strong id="examStateName">–</strong><br>
+        <span style="font-size:.8rem">(Bundesland in der Übersicht ändern)</span>
+      </p>
+      <button class="btn btn-primary" style="width:100%" onclick="startExam()">
+        Prüfung starten
+      </button>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="examQuiz" style="display:none">
+    <div class="card">
+      <div class="eq-header">
+        <span class="eq-counter" id="eqCounter"></span>
+        <span class="eq-cat" id="eqCat"></span>
+      </div>
+      <div class="eq-progbar"><div id="eqProg" class="eq-progfill" style="width:0%"></div></div>
+      <p class="eq-text" id="eqText"></p>
+      <div id="eqOptions"></div>
+      <div class="exam-nav-row">
+        <button class="btn btn-secondary" id="examPrevBtn" onclick="examPrev()">← Zurück</button>
+        <button class="btn btn-primary" id="examNextBtn" onclick="examNext()">Weiter →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div id="examResult" style="display:none">
+    <div class="card" style="text-align:center">
+      <div class="exam-score-big" id="examScore"></div>
+      <div class="exam-verdict" id="examVerdict"></div>
+      <div class="exam-meta">
+        <p id="examBest"></p>
+        <p id="examCount"></p>
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-bottom:.5rem" onclick="examReset()">
+        Neue Prüfung
+      </button>
+    </div>
+
+    <div class="review-title">📋 Auswertung</div>
+    <div id="examReview"></div>
+  </div>
+
+</section>
+
+<!-- Bottom Navigation -->
+<nav id="bottomNav">
+  <button data-s="overview" onclick="go('overview')">
+    <span class="nav-icon">📊</span>Übersicht
+  </button>
+  <button data-s="practice" onclick="go('practice')">
+    <span class="nav-icon">📖</span>Üben
+  </button>
+  <button data-s="exam" onclick="go('exam')">
+    <span class="nav-icon">🎓</span>Prüfung
+  </button>
+</nav>
+
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>
