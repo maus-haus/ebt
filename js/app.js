@@ -5,9 +5,16 @@ import { initPractice, setPracticeFilter, practiceNext, practiceSkip } from './p
 import { initExam, startExam, examNext, examPrev, examReset } from './exam.js';
 import { initOverview, renderOverview, buildStateSelect, changeState, confirmReset } from './overview.js';
 
+// Wrap go() so navigating to overview always re-renders fresh counts
+const _go = go;
+function goWithRefresh(sec) {
+  _go(sec);
+  if (!sec || sec === 'overview') renderOverview();
+}
+
 // Expose to window for onclick handlers in HTML
 Object.assign(window, {
-  go,
+  go: goWithRefresh,
   setPracticeFilter,
   practiceNext,
   practiceSkip,
@@ -33,4 +40,4 @@ if ('serviceWorker' in navigator) {
 }
 
 // Navigate to hash or default
-go(location.hash.slice(1) || 'overview');
+goWithRefresh(location.hash.slice(1) || 'overview');
