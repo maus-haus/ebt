@@ -3,6 +3,13 @@
 import { S, save } from './state.js';
 import { QUESTIONS, STATE_QUESTIONS } from './data/questions.js';
 
+// Track the original deck size for learn-mode progress display
+let learnTotal = 0;
+
+function shuffle(arr) {
+  return arr.slice().sort(() => Math.random() - 0.5);
+}
+
 // Build a shuffled deck based on the current filter
 export function buildPracticeDeck() {
   let pool;
@@ -13,11 +20,26 @@ export function buildPracticeDeck() {
     const sq = STATE_QUESTIONS[S.state] || [];
     const stateQ = sq.map((q, i) => ({ ...q, id: 'bl_' + i, cat: 'Bundesland' }));
     pool = [...QUESTIONS, ...stateQ];
+  } else if (S.practiceFilter === 'Lernen') {
+    // Flashcard learn mode: incorrect first, then unseen (neither correct nor incorrect)
+    const sq = STATE_QUESTIONS[S.state] || [];
+    const all = [
+      ...QUESTIONS,
+      ...sq.map((q, i) => ({ ...q, id: 'bl_' + i, cat: 'Bundesland' })),
+    ];
+    const wrong  = shuffle(all.filter(q => S.incorrect.has(String(q.id))));
+    const unseen = shuffle(all.filter(q => !S.correct.has(String(q.id)) && !S.incorrect.has(String(q.id))));
+    pool = [...wrong, ...unseen];
+    learnTotal = pool.length;
   } else {
     pool = QUESTIONS.filter(q => q.cat === S.practiceFilter);
   }
-  // Shuffle
-  S.practiceDeck = pool.slice().sort(() => Math.random() - 0.5);
+  // Shuffle (except learn mode which is already ordered)
+  if (S.practiceFilter !== 'Lernen') {
+    S.practiceDeck = pool.slice().sort(() => Math.random() - 0.5);
+  } else {
+    S.practiceDeck = pool;
+  }
   S.practiceIdx = 0;
 }
 
@@ -32,6 +54,18 @@ export function renderPractice() {
   if (!q) {
     showDone();
     return;
+  }
+
+  // Question image
+  const imgWrap = document.getElementById('pqImgWrap');
+  const img = document.getElementById('pqImg');
+  if (q.image) {
+    img.src = '/images/questions/' + q.image;
+    img.alt = q.text;
+    imgWrap.style.display = '';
+  } else {
+    imgWrap.style.display = 'none';
+    img.src = '';
   }
 
   // Question text
@@ -57,8 +91,14 @@ export function renderPractice() {
   // Counter & progress
   const idx = S.practiceIdx + 1;
   const total = totalQ();
-  document.getElementById('pqCounter').textContent = `${idx} / ${total}`;
-  document.getElementById('pqProg').style.width = ((idx - 1) / total * 100) + '%';
+  if (S.practiceFilter === 'Lernen') {
+    const mastered = learnTotal - (total - S.practiceIdx);
+    document.getElementById('pqCounter').textContent = `Gelernt: ${Math.max(0, mastered)} / ${learnTotal}`;
+    document.getElementById('pqProg').style.width = (Math.max(0, mastered) / learnTotal * 100) + '%';
+  } else {
+    document.getElementById('pqCounter').textContent = `${idx} / ${total}`;
+    document.getElementById('pqProg').style.width = ((idx - 1) / total * 100) + '%';
+  }
   document.getElementById('pqCat').textContent = q.cat;
 }
 
@@ -92,8 +132,15 @@ function selectAnswer(chosen) {
     fb.textContent = '✓ Richtig!';
     fb.className = 'pq-feedback fb-correct';
   } else {
-    fb.textContent = `✗ Falsch — Richtig: ${q.options[correct]}`;
+    const requeueNote = S.practiceFilter === 'Lernen' ? ' · Kommt nochmal 🔁' : '';
+    fb.textContent = `✗ Falsch — Richtig: ${q.options[correct]}${requeueNote}`;
     fb.className = 'pq-feedback fb-wrong';
+    // In learn mode, re-queue the question at the end of the deck
+    if (S.practiceFilter === 'Lernen') {
+      const remaining = S.practiceDeck.length - S.practiceIdx - 1;
+      const insertAt = S.practiceIdx + 1 + Math.min(3, remaining);
+      S.practiceDeck.splice(insertAt, 0, { ...q });
+    }
   }
 
   document.getElementById('pqNextBtn').style.display = '';
@@ -118,14 +165,23 @@ export function practiceSkip() {
 }
 
 function showDone() {
-  const total = totalQ();
-  const right = S.practiceDeck.filter(q => S.correct.has(String(q.id))).length;
-  document.getElementById('pqText').textContent = '🎉 Runde abgeschlossen!';
-  document.getElementById('pqOptions').innerHTML = `
-    <div class="done-summary">
-      <p>In dieser Runde: <strong>${right} / ${total}</strong> richtig</p>
-      <p>Gesamtfortschritt: ${S.correct.size} bekannt, ${S.incorrect.size} falsch, ${S.skipped.size} übersprungen</p>
-    </div>`;
+  if (S.practiceFilter === 'Lernen') {
+    document.getElementById('pqText').textContent = '🎉 Alles gelernt!';
+    document.getElementById('pqOptions').innerHTML = `
+      <div class="done-summary">
+        <p>Du hast alle <strong>${learnTotal}</strong> Fragen in dieser Runde richtig beantwortet.</p>
+        <p>Gesamtfortschritt: ${S.correct.size} bekannt, ${S.incorrect.size} falsch, ${S.skipped.size} übersprungen</p>
+      </div>`;
+  } else {
+    const total = totalQ();
+    const right = S.practiceDeck.filter(q => S.correct.has(String(q.id))).length;
+    document.getElementById('pqText').textContent = '🎉 Runde abgeschlossen!';
+    document.getElementById('pqOptions').innerHTML = `
+      <div class="done-summary">
+        <p>In dieser Runde: <strong>${right} / ${total}</strong> richtig</p>
+        <p>Gesamtfortschritt: ${S.correct.size} bekannt, ${S.incorrect.size} falsch, ${S.skipped.size} übersprungen</p>
+      </div>`;
+  }
   document.getElementById('pqFeedback').innerHTML = '';
   document.getElementById('pqNextBtn').style.display = 'none';
   document.getElementById('pqCat').textContent = '';

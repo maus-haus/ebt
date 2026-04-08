@@ -51,6 +51,19 @@ function renderExamQ() {
 
   document.getElementById('eqCounter').textContent = `Frage ${examCurrent + 1} / ${total}`;
   document.getElementById('eqProg').style.width = (examCurrent / total * 100) + '%';
+
+  // Question image
+  const imgWrap = document.getElementById('eqImgWrap');
+  const img = document.getElementById('eqImg');
+  if (q.image) {
+    img.src = '/images/questions/' + q.image;
+    img.alt = q.text;
+    imgWrap.style.display = '';
+  } else {
+    imgWrap.style.display = 'none';
+    img.src = '';
+  }
+
   document.getElementById('eqText').textContent = q.text;
   document.getElementById('eqCat').textContent = q.cat;
 
@@ -126,9 +139,12 @@ function finishExam() {
   const revWrap = document.getElementById('examReview');
   revWrap.innerHTML = review.map(({ q, chosen, right }, i) => {
     const chosenText = chosen !== null ? esc(q.options[chosen]) : '(keine Antwort)';
+    const imgHtml = q.image
+      ? `<img class="q-img rev-q-img" src="/images/questions/${esc(q.image)}" alt="${esc(q.text)}">`
+      : '';
     return `<div class="rev-item ${right ? 'rev-right' : 'rev-wrong'}">
       <div class="rev-num">Frage ${i + 1} <span class="rev-cat">${esc(q.cat)}</span></div>
-      <div class="rev-text">${esc(q.text)}</div>
+      ${imgHtml}<div class="rev-text">${esc(q.text)}</div>
       <div class="rev-answer">
         ${right
           ? `<span class="rev-correct">✓ ${chosenText}</span>`
