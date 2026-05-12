@@ -18,8 +18,12 @@ function allQuestions() {
   ];
 }
 
+function isUnseen(q) {
+  return !S.correct.has(String(q.id)) && !S.incorrect.has(String(q.id));
+}
+
 function countUnseen() {
-  return allQuestions().filter(q => !S.correct.has(String(q.id)) && !S.incorrect.has(String(q.id))).length;
+  return allQuestions().filter(isUnseen).length;
 }
 
 // Build a shuffled deck based on the current filter
@@ -31,12 +35,12 @@ export function buildPracticeDeck() {
   } else if (S.practiceFilter === 'Alle') {
     pool = allQuestions();
   } else if (S.practiceFilter === 'Ungesehen') {
-    pool = allQuestions().filter(q => !S.correct.has(String(q.id)) && !S.incorrect.has(String(q.id)));
+    pool = allQuestions().filter(isUnseen);
   } else if (S.practiceFilter === 'Lernen') {
     // Flashcard learn mode: incorrect first, then unseen (neither correct nor incorrect)
     const all = allQuestions();
     const wrong  = shuffle(all.filter(q => S.incorrect.has(String(q.id))));
-    const unseen = shuffle(all.filter(q => !S.correct.has(String(q.id)) && !S.incorrect.has(String(q.id))));
+    const unseen = shuffle(all.filter(isUnseen));
     pool = [...wrong, ...unseen];
     learnTotal = pool.length;
   } else {
