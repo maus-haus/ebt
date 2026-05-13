@@ -1,4 +1,9 @@
-const CACHE = 'ebt-v2';
+const CACHE = 'ebt-v3';
+const offlineResponse = () =>
+  new Response('Offline – bitte später erneut versuchen.', {
+    status: 503,
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+  });
 const ASSETS = [
   '/',
   '/index.html',
@@ -39,12 +44,44 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET') return;
+
+  if (e.request.mode === 'navigate') {
+    e.respondWith(
+      fetch(e.request)
+        .then(response => {
+          if (response && response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE).then(c => {
+              c.put(e.request, copy);
+              if (new URL(e.request.url).pathname === '/') {
+                c.put('/index.html', response.clone());
+              }
+            });
+          }
+          return response;
+        })
+        .catch(() =>
+          caches.match(e.request)
+            .then(cached => cached || caches.match('/index.html'))
+            .then(cached => cached || offlineResponse())
+        )
+    );
+    return;
+  }
+
   e.respondWith(
     caches.match(e.request)
-      .then(cached => cached || fetch(e.request))
-      .catch(() => new Response('Offline – bitte später erneut versuchen.', {
-        status: 503,
-        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-      }))
+      .then(cached => {
+        const network = fetch(e.request).then(response => {
+          if (response && response.ok && e.request.url.startsWith(self.location.origin)) {
+            const copy = response.clone();
+            caches.open(CACHE).then(c => c.put(e.request, copy));
+          }
+          return response;
+        }).catch(() => cached || offlineResponse());
+        return cached ? cached : network;
+      })
+      .catch(() => offlineResponse())
   );
 });
