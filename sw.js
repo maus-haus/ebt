@@ -1,4 +1,4 @@
-const CACHE = 'ebt-v2';
+const CACHE = 'ebt-v3';
 const ASSETS = [
   '/',
   '/index.html',
@@ -39,9 +39,40 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET') return;
+
+  if (e.request.mode === 'navigate') {
+    e.respondWith(
+      fetch(e.request)
+        .then(response => {
+          const copy = response.clone();
+          caches.open(CACHE).then(c => c.put('/index.html', copy));
+          return response;
+        })
+        .catch(() =>
+          caches.match('/index.html').then(cached =>
+            cached || new Response('Offline – bitte später erneut versuchen.', {
+              status: 503,
+              headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+            })
+          )
+        )
+    );
+    return;
+  }
+
   e.respondWith(
     caches.match(e.request)
-      .then(cached => cached || fetch(e.request))
+      .then(cached => {
+        const network = fetch(e.request).then(response => {
+          if (response && response.ok && e.request.url.startsWith(self.location.origin)) {
+            const copy = response.clone();
+            caches.open(CACHE).then(c => c.put(e.request, copy));
+          }
+          return response;
+        });
+        return cached || network;
+      })
       .catch(() => new Response('Offline – bitte später erneut versuchen.', {
         status: 503,
         headers: { 'Content-Type': 'text/plain; charset=utf-8' },

@@ -37,7 +37,10 @@ initNav();
 
 // Register service worker
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(() => {});
+  navigator.serviceWorker
+    .register('/sw.js')
+    .then(reg => reg.update())
+    .catch(() => {});
 }
 
 // Navigate to hash or default
