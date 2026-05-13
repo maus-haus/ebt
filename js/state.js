@@ -4,8 +4,7 @@ export const S = {
   // Practice mode
   practiceIdx: 0,
   practiceDeck: [],
-  practiceFilter: 'Alle',
-  practiceUnseenOnly: false,
+  practiceFilter: 'Unbekannt',
   correct: new Set(),
   incorrect: new Set(),
   skipped: new Set(),
