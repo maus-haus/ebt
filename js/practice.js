@@ -29,22 +29,24 @@ function countUnseen() {
 // Build a shuffled deck based on the current filter
 export function buildPracticeDeck() {
   let pool;
-  if (S.practiceFilter === 'Bundesland') {
-    const sq = STATE_QUESTIONS[S.state] || [];
-    pool = sq.map((q, i) => ({ ...q, id: 'bl_' + i, cat: 'Bundesland' }));
-  } else if (S.practiceFilter === 'Alle') {
-    pool = allQuestions();
-  } else if (S.practiceFilter === 'Ungesehen') {
-    pool = allQuestions().filter(isUnseen);
-  } else if (S.practiceFilter === 'Lernen') {
+  if (S.practiceFilter === 'Lernen') {
     // Flashcard learn mode: incorrect first, then unseen (neither correct nor incorrect)
     const all = allQuestions();
     const wrong  = shuffle(all.filter(q => S.incorrect.has(String(q.id))));
     const unseen = shuffle(all.filter(isUnseen));
     pool = [...wrong, ...unseen];
     learnTotal = pool.length;
+  } else if (S.practiceFilter === 'Bundesland') {
+    const sq = STATE_QUESTIONS[S.state] || [];
+    pool = sq.map((q, i) => ({ ...q, id: 'bl_' + i, cat: 'Bundesland' }));
+  } else if (S.practiceFilter === 'Alle') {
+    pool = allQuestions();
   } else {
     pool = QUESTIONS.filter(q => q.cat === S.practiceFilter);
+  }
+  // Apply unseen toggle as a post-filter (not applicable in Lernen mode)
+  if (S.practiceFilter !== 'Lernen' && S.practiceUnseenOnly) {
+    pool = pool.filter(isUnseen);
   }
   // Shuffle (except learn mode which is already ordered)
   if (S.practiceFilter !== 'Lernen') {
@@ -209,19 +211,31 @@ export function setPracticeFilter(cat) {
   renderPractice();
 }
 
+function toggleUnseenFilter() {
+  // Lernen has its own unseen logic; exit it when toggling Ungesehen
+  if (S.practiceFilter === 'Lernen') {
+    S.practiceFilter = 'Alle';
+  }
+  S.practiceUnseenOnly = !S.practiceUnseenOnly;
+  buildFilterButtons();
+  buildPracticeDeck();
+  renderPractice();
+}
+
 function buildFilterButtons() {
   const wrap = document.getElementById('practiceFilters');
   const unseenCount = countUnseen();
   wrap.innerHTML = '';
 
-  // Special "Ungesehen" button first (like "Review" in sister app)
+  // Ungesehen is an independent toggle — active state driven by S.practiceUnseenOnly
   const unBtn = document.createElement('button');
-  unBtn.className = 'filter-btn filter-btn-unseen' + (S.practiceFilter === 'Ungesehen' ? ' active' : '');
+  unBtn.className = 'filter-btn filter-btn-unseen' + (S.practiceUnseenOnly ? ' active' : '');
   unBtn.dataset.cat = 'Ungesehen';
   unBtn.textContent = 'Ungesehen' + (unseenCount ? ' ' + unseenCount : '');
-  unBtn.addEventListener('click', () => setPracticeFilter('Ungesehen'));
+  unBtn.addEventListener('click', () => toggleUnseenFilter());
   wrap.appendChild(unBtn);
 
+  // Category buttons are mutually exclusive
   const cats = ['Alle', 'Demokratie', 'Geschichte', 'Gesellschaft', 'Europa', 'Bundesland'];
   cats.forEach(c => {
     const btn = document.createElement('button');
