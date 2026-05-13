@@ -50,13 +50,15 @@ self.addEventListener('fetch', e => {
     e.respondWith(
       fetch(e.request)
         .then(response => {
-          const copy = response.clone();
-          caches.open(CACHE).then(c => {
-            c.put(e.request, copy);
-            if (new URL(e.request.url).pathname === '/') {
-              c.put('/index.html', response.clone());
-            }
-          });
+          if (response && response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE).then(c => {
+              c.put(e.request, copy);
+              if (new URL(e.request.url).pathname === '/') {
+                c.put('/index.html', response.clone());
+              }
+            });
+          }
           return response;
         })
         .catch(() =>
