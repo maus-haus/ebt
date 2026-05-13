@@ -1,4 +1,9 @@
 const CACHE = 'ebt-v3';
+const offlineResponse = () =>
+  new Response('Offline – bitte später erneut versuchen.', {
+    status: 503,
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+  });
 const ASSETS = [
   '/',
   '/index.html',
@@ -51,10 +56,7 @@ self.addEventListener('fetch', e => {
         })
         .catch(() =>
           caches.match('/index.html').then(cached =>
-            cached || new Response('Offline – bitte später erneut versuchen.', {
-              status: 503,
-              headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-            })
+            cached || offlineResponse()
           )
         )
     );
@@ -70,12 +72,9 @@ self.addEventListener('fetch', e => {
             caches.open(CACHE).then(c => c.put(e.request, copy));
           }
           return response;
-        });
+        }).catch(() => cached);
         return cached || network;
       })
-      .catch(() => new Response('Offline – bitte später erneut versuchen.', {
-        status: 503,
-        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-      }))
+      .catch(() => offlineResponse())
   );
 });
