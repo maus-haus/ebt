@@ -3,9 +3,6 @@
 import { S, save } from './state.js';
 import { QUESTIONS, STATE_QUESTIONS } from './data/questions.js';
 
-// Track the original deck size for learn-mode progress display
-let learnTotal = 0;
-
 function shuffle(arr) {
   return arr.slice().sort(() => Math.random() - 0.5);
 }
@@ -18,25 +15,18 @@ function allQuestions() {
   ];
 }
 
-function isUnseen(q) {
-  return !S.correct.has(String(q.id)) && !S.incorrect.has(String(q.id));
+function isUnknown(q) {
+  return !S.correct.has(String(q.id));
 }
 
-function countUnseen() {
-  return allQuestions().filter(isUnseen).length;
+function countUnknown() {
+  return allQuestions().filter(isUnknown).length;
 }
 
 // Build a shuffled deck based on the current filter
 export function buildPracticeDeck() {
   let pool;
-  if (S.practiceFilter === 'Lernen') {
-    // Flashcard learn mode: incorrect first, then unseen (neither correct nor incorrect)
-    const all = allQuestions();
-    const wrong  = shuffle(all.filter(q => S.incorrect.has(String(q.id))));
-    const unseen = shuffle(all.filter(isUnseen));
-    pool = [...wrong, ...unseen];
-    learnTotal = pool.length;
-  } else if (S.practiceFilter === 'Bundesland') {
+  if (S.practiceFilter === 'Bundesland') {
     const sq = STATE_QUESTIONS[S.state] || [];
     pool = sq.map((q, i) => ({ ...q, id: 'bl_' + i, cat: 'Bundesland' }));
   } else if (S.practiceFilter === 'Alle') {
@@ -44,16 +34,10 @@ export function buildPracticeDeck() {
   } else {
     pool = QUESTIONS.filter(q => q.cat === S.practiceFilter);
   }
-  // Apply unseen toggle as a post-filter (not applicable in Lernen mode)
-  if (S.practiceFilter !== 'Lernen' && S.practiceUnseenOnly) {
-    pool = pool.filter(isUnseen);
+  if (S.practiceUnknownOnly) {
+    pool = pool.filter(isUnknown);
   }
-  // Shuffle (except learn mode which is already ordered)
-  if (S.practiceFilter !== 'Lernen') {
-    S.practiceDeck = pool.slice().sort(() => Math.random() - 0.5);
-  } else {
-    S.practiceDeck = pool;
-  }
+  S.practiceDeck = pool.slice().sort(() => Math.random() - 0.5);
   S.practiceIdx = 0;
 }
 
@@ -105,14 +89,8 @@ export function renderPractice() {
   // Counter & progress
   const idx = S.practiceIdx + 1;
   const total = totalQ();
-  if (S.practiceFilter === 'Lernen') {
-    const mastered = learnTotal - (total - S.practiceIdx);
-    document.getElementById('pqCounter').textContent = `Gelernt: ${Math.max(0, mastered)} / ${learnTotal}`;
-    document.getElementById('pqProg').style.width = (Math.max(0, mastered) / learnTotal * 100) + '%';
-  } else {
-    document.getElementById('pqCounter').textContent = `${idx} / ${total}`;
-    document.getElementById('pqProg').style.width = ((idx - 1) / total * 100) + '%';
-  }
+  document.getElementById('pqCounter').textContent = `${idx} / ${total}`;
+  document.getElementById('pqProg').style.width = ((idx - 1) / total * 100) + '%';
   document.getElementById('pqCat').textContent = q.cat;
 }
 
@@ -147,11 +125,11 @@ function selectAnswer(chosen) {
     fb.textContent = '✓ Richtig!';
     fb.className = 'pq-feedback fb-correct';
   } else {
-    const requeueNote = S.practiceFilter === 'Lernen' ? ' · Kommt nochmal 🔁' : '';
+    const requeueNote = S.practiceUnknownOnly ? ' · Kommt nochmal 🔁' : '';
     fb.textContent = `✗ Falsch — Richtig: ${q.options[correct]}${requeueNote}`;
     fb.className = 'pq-feedback fb-wrong';
-    // In learn mode, re-queue the question at the end of the deck
-    if (S.practiceFilter === 'Lernen') {
+    // In unknown mode, re-queue the question to appear again
+    if (S.practiceUnknownOnly) {
       const remaining = S.practiceDeck.length - S.practiceIdx - 1;
       const insertAt = S.practiceIdx + 1 + Math.min(3, remaining);
       S.practiceDeck.splice(insertAt, 0, { ...q });
@@ -180,11 +158,12 @@ export function practiceSkip() {
 }
 
 function showDone() {
-  if (S.practiceFilter === 'Lernen') {
-    document.getElementById('pqText').textContent = '🎉 Alles gelernt!';
+  if (S.practiceUnknownOnly) {
+    const scope = S.practiceFilter === 'Alle' ? 'alle Kategorien' : `Kategorie „${S.practiceFilter}“`;
+    document.getElementById('pqText').textContent = '🎉 Alle unbekannten Fragen sitzen!';
     document.getElementById('pqOptions').innerHTML = `
       <div class="done-summary">
-        <p>Du hast alle <strong>${learnTotal}</strong> Fragen in dieser Runde richtig beantwortet.</p>
+        <p>Du hast alle unbekannten Fragen (${scope}) dieser Runde richtig beantwortet.</p>
         <p>Gesamtfortschritt: ${S.correct.size} bekannt, ${S.incorrect.size} falsch, ${S.skipped.size} übersprungen</p>
       </div>`;
   } else {
@@ -211,12 +190,8 @@ export function setPracticeFilter(cat) {
   renderPractice();
 }
 
-function toggleUnseenFilter() {
-  // Lernen has its own unseen logic; exit it when toggling Ungesehen
-  if (S.practiceFilter === 'Lernen') {
-    S.practiceFilter = 'Alle';
-  }
-  S.practiceUnseenOnly = !S.practiceUnseenOnly;
+function toggleUnknownFilter() {
+  S.practiceUnknownOnly = !S.practiceUnknownOnly;
   buildFilterButtons();
   buildPracticeDeck();
   renderPractice();
@@ -224,15 +199,15 @@ function toggleUnseenFilter() {
 
 function buildFilterButtons() {
   const wrap = document.getElementById('practiceFilters');
-  const unseenCount = countUnseen();
+  const unknownCount = countUnknown();
   wrap.innerHTML = '';
 
-  // Ungesehen is an independent toggle — active state driven by S.practiceUnseenOnly
+  // Unbekannt works as an independent toggle on top of category filters
   const unBtn = document.createElement('button');
-  unBtn.className = 'filter-btn filter-btn-unseen' + (S.practiceUnseenOnly ? ' active' : '');
-  unBtn.dataset.cat = 'Ungesehen';
-  unBtn.textContent = 'Ungesehen' + (unseenCount ? ' ' + unseenCount : '');
-  unBtn.addEventListener('click', () => toggleUnseenFilter());
+  unBtn.className = 'filter-btn filter-btn-unseen' + (S.practiceUnknownOnly ? ' active' : '');
+  unBtn.dataset.cat = 'Unbekannt';
+  unBtn.textContent = 'Unbekannt' + (unknownCount ? ' ' + unknownCount : '');
+  unBtn.addEventListener('click', () => toggleUnknownFilter());
   wrap.appendChild(unBtn);
 
   // Category buttons are mutually exclusive

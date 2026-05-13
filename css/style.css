@@ -191,3 +191,16 @@ header .de-flag{font-size:1.3rem}
 
 /* ── Misc ── */
 hr.divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
+
+/* ── Cheatsheet ── */
+.cheat-list{
+  margin:0;
+  padding-left:1rem;
+  display:flex;
+  flex-direction:column;
+  gap:.6rem;
+  color:var(--muted);
+  font-size:.92rem;
+  line-height:1.5;
+}
+.cheat-list li strong{color:var(--text)}
