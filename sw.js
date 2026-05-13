@@ -51,13 +51,18 @@ self.addEventListener('fetch', e => {
       fetch(e.request)
         .then(response => {
           const copy = response.clone();
-          caches.open(CACHE).then(c => c.put('/index.html', copy));
+          caches.open(CACHE).then(c => {
+            c.put(e.request, copy);
+            if (new URL(e.request.url).pathname === '/') {
+              c.put('/index.html', response.clone());
+            }
+          });
           return response;
         })
         .catch(() =>
-          caches.match('/index.html').then(cached =>
-            cached || offlineResponse()
-          )
+          caches.match(e.request)
+            .then(cached => cached || caches.match('/index.html'))
+            .then(cached => cached || offlineResponse())
         )
     );
     return;
@@ -72,8 +77,8 @@ self.addEventListener('fetch', e => {
             caches.open(CACHE).then(c => c.put(e.request, copy));
           }
           return response;
-        }).catch(() => cached);
-        return cached || network;
+        }).catch(() => cached || offlineResponse());
+        return cached ? cached : network;
       })
       .catch(() => offlineResponse())
   );
