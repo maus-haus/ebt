@@ -5,6 +5,7 @@ export const S = {
   practiceIdx: 0,
   practiceDeck: [],
   practiceFilter: 'Alle',
+  practiceUnseenOnly: false,
   correct: new Set(),
   incorrect: new Set(),
   skipped: new Set(),

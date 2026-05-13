@@ -1,7 +1,7 @@
 // Entry point — wire up all modules
 
 import { go, initNav } from './nav.js';
-import { initPractice, setPracticeFilter, practiceNext, practiceSkip } from './practice.js';
+import { initPractice, setPracticeFilter, practiceNext, practiceSkip, refreshPracticeFilters } from './practice.js';
 import { initExam, startExam, examNext, examPrev, examReset } from './exam.js';
 import { initOverview, renderOverview, buildStateSelect, changeState, confirmReset } from './overview.js';
 
@@ -10,6 +10,7 @@ const _go = go;
 function goWithRefresh(sec) {
   _go(sec);
   if (!sec || sec === 'overview') renderOverview();
+  if (sec === 'practice') refreshPracticeFilters();
 }
 
 // Expose to window for onclick handlers in HTML

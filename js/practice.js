@@ -10,29 +10,43 @@ function shuffle(arr) {
   return arr.slice().sort(() => Math.random() - 0.5);
 }
 
+function allQuestions() {
+  const sq = STATE_QUESTIONS[S.state] || [];
+  return [
+    ...QUESTIONS,
+    ...sq.map((q, i) => ({ ...q, id: 'bl_' + i, cat: 'Bundesland' })),
+  ];
+}
+
+function isUnseen(q) {
+  return !S.correct.has(String(q.id)) && !S.incorrect.has(String(q.id));
+}
+
+function countUnseen() {
+  return allQuestions().filter(isUnseen).length;
+}
+
 // Build a shuffled deck based on the current filter
 export function buildPracticeDeck() {
   let pool;
-  if (S.practiceFilter === 'Bundesland') {
+  if (S.practiceFilter === 'Lernen') {
+    // Flashcard learn mode: incorrect first, then unseen (neither correct nor incorrect)
+    const all = allQuestions();
+    const wrong  = shuffle(all.filter(q => S.incorrect.has(String(q.id))));
+    const unseen = shuffle(all.filter(isUnseen));
+    pool = [...wrong, ...unseen];
+    learnTotal = pool.length;
+  } else if (S.practiceFilter === 'Bundesland') {
     const sq = STATE_QUESTIONS[S.state] || [];
     pool = sq.map((q, i) => ({ ...q, id: 'bl_' + i, cat: 'Bundesland' }));
   } else if (S.practiceFilter === 'Alle') {
-    const sq = STATE_QUESTIONS[S.state] || [];
-    const stateQ = sq.map((q, i) => ({ ...q, id: 'bl_' + i, cat: 'Bundesland' }));
-    pool = [...QUESTIONS, ...stateQ];
-  } else if (S.practiceFilter === 'Lernen') {
-    // Flashcard learn mode: incorrect first, then unseen (neither correct nor incorrect)
-    const sq = STATE_QUESTIONS[S.state] || [];
-    const all = [
-      ...QUESTIONS,
-      ...sq.map((q, i) => ({ ...q, id: 'bl_' + i, cat: 'Bundesland' })),
-    ];
-    const wrong  = shuffle(all.filter(q => S.incorrect.has(String(q.id))));
-    const unseen = shuffle(all.filter(q => !S.correct.has(String(q.id)) && !S.incorrect.has(String(q.id))));
-    pool = [...wrong, ...unseen];
-    learnTotal = pool.length;
+    pool = allQuestions();
   } else {
     pool = QUESTIONS.filter(q => q.cat === S.practiceFilter);
+  }
+  // Apply unseen toggle as a post-filter (not applicable in Lernen mode)
+  if (S.practiceFilter !== 'Lernen' && S.practiceUnseenOnly) {
+    pool = pool.filter(isUnseen);
   }
   // Shuffle (except learn mode which is already ordered)
   if (S.practiceFilter !== 'Lernen') {
@@ -118,6 +132,7 @@ function selectAnswer(chosen) {
     S.correct.delete(qid);
   }
   save();
+  buildFilterButtons();
 
   // Colour buttons
   document.querySelectorAll('.opt-btn').forEach((btn, i) => {
@@ -191,18 +206,37 @@ function showDone() {
 
 export function setPracticeFilter(cat) {
   S.practiceFilter = cat;
-  document.querySelectorAll('#practiceFilters button').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.cat === cat);
-  });
+  buildFilterButtons();
   buildPracticeDeck();
   renderPractice();
 }
 
-export function initPractice() {
-  // Build filter buttons
+function toggleUnseenFilter() {
+  // Lernen has its own unseen logic; exit it when toggling Ungesehen
+  if (S.practiceFilter === 'Lernen') {
+    S.practiceFilter = 'Alle';
+  }
+  S.practiceUnseenOnly = !S.practiceUnseenOnly;
+  buildFilterButtons();
+  buildPracticeDeck();
+  renderPractice();
+}
+
+function buildFilterButtons() {
   const wrap = document.getElementById('practiceFilters');
-  const cats = ['Alle', 'Demokratie', 'Geschichte', 'Gesellschaft', 'Europa', 'Bundesland'];
+  const unseenCount = countUnseen();
   wrap.innerHTML = '';
+
+  // Ungesehen is an independent toggle — active state driven by S.practiceUnseenOnly
+  const unBtn = document.createElement('button');
+  unBtn.className = 'filter-btn filter-btn-unseen' + (S.practiceUnseenOnly ? ' active' : '');
+  unBtn.dataset.cat = 'Ungesehen';
+  unBtn.textContent = 'Ungesehen' + (unseenCount ? ' ' + unseenCount : '');
+  unBtn.addEventListener('click', () => toggleUnseenFilter());
+  wrap.appendChild(unBtn);
+
+  // Category buttons are mutually exclusive
+  const cats = ['Alle', 'Demokratie', 'Geschichte', 'Gesellschaft', 'Europa', 'Bundesland'];
   cats.forEach(c => {
     const btn = document.createElement('button');
     btn.className = 'filter-btn' + (c === S.practiceFilter ? ' active' : '');
@@ -211,7 +245,14 @@ export function initPractice() {
     btn.addEventListener('click', () => setPracticeFilter(c));
     wrap.appendChild(btn);
   });
+}
 
+export function refreshPracticeFilters() {
+  buildFilterButtons();
+}
+
+export function initPractice() {
+  buildFilterButtons();
   buildPracticeDeck();
   renderPractice();
 }

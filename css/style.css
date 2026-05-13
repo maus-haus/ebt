@@ -113,6 +113,8 @@ header .de-flag{font-size:1.3rem}
   cursor:pointer;transition:all .12s;
 }
 .filter-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.filter-btn-unseen{border-color:var(--accent2);color:var(--accent2)}
+.filter-btn-unseen.active{background:var(--accent2);border-color:var(--accent2);color:#fff}
 
 /* ── Exam ── */
 #examIntro{text-align:center;padding:1rem 0}
