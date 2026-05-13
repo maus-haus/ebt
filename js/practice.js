@@ -26,16 +26,16 @@ function countUnknown() {
 // Build a shuffled deck based on the current filter
 export function buildPracticeDeck() {
   let pool;
-  if (S.practiceFilter === 'Unbekannt') {
-    // Keep training only unknown cards (not marked correct yet)
-    pool = allQuestions().filter(isUnknown);
-  } else if (S.practiceFilter === 'Bundesland') {
+  if (S.practiceFilter === 'Bundesland') {
     const sq = STATE_QUESTIONS[S.state] || [];
     pool = sq.map((q, i) => ({ ...q, id: 'bl_' + i, cat: 'Bundesland' }));
   } else if (S.practiceFilter === 'Alle') {
     pool = allQuestions();
   } else {
     pool = QUESTIONS.filter(q => q.cat === S.practiceFilter);
+  }
+  if (S.practiceUnknownOnly) {
+    pool = pool.filter(isUnknown);
   }
   S.practiceDeck = pool.slice().sort(() => Math.random() - 0.5);
   S.practiceIdx = 0;
@@ -125,11 +125,11 @@ function selectAnswer(chosen) {
     fb.textContent = '✓ Richtig!';
     fb.className = 'pq-feedback fb-correct';
   } else {
-    const requeueNote = S.practiceFilter === 'Unbekannt' ? ' · Kommt nochmal 🔁' : '';
+    const requeueNote = S.practiceUnknownOnly ? ' · Kommt nochmal 🔁' : '';
     fb.textContent = `✗ Falsch — Richtig: ${q.options[correct]}${requeueNote}`;
     fb.className = 'pq-feedback fb-wrong';
     // In unknown mode, re-queue the question to appear again
-    if (S.practiceFilter === 'Unbekannt') {
+    if (S.practiceUnknownOnly) {
       const remaining = S.practiceDeck.length - S.practiceIdx - 1;
       const insertAt = S.practiceIdx + 1 + Math.min(3, remaining);
       S.practiceDeck.splice(insertAt, 0, { ...q });
@@ -158,11 +158,12 @@ export function practiceSkip() {
 }
 
 function showDone() {
-  if (S.practiceFilter === 'Unbekannt') {
+  if (S.practiceUnknownOnly) {
+    const scope = S.practiceFilter === 'Alle' ? 'alle Kategorien' : `Kategorie „${S.practiceFilter}“`;
     document.getElementById('pqText').textContent = '🎉 Alle unbekannten Fragen sitzen!';
     document.getElementById('pqOptions').innerHTML = `
       <div class="done-summary">
-        <p>Du hast alle unbekannten Fragen dieser Runde richtig beantwortet.</p>
+        <p>Du hast alle unbekannten Fragen (${scope}) dieser Runde richtig beantwortet.</p>
         <p>Gesamtfortschritt: ${S.correct.size} bekannt, ${S.incorrect.size} falsch, ${S.skipped.size} übersprungen</p>
       </div>`;
   } else {
@@ -189,20 +190,33 @@ export function setPracticeFilter(cat) {
   renderPractice();
 }
 
+function toggleUnknownFilter() {
+  S.practiceUnknownOnly = !S.practiceUnknownOnly;
+  buildFilterButtons();
+  buildPracticeDeck();
+  renderPractice();
+}
+
 function buildFilterButtons() {
   const wrap = document.getElementById('practiceFilters');
   const unknownCount = countUnknown();
   wrap.innerHTML = '';
 
+  // Unbekannt works as an independent toggle on top of category filters
+  const unBtn = document.createElement('button');
+  unBtn.className = 'filter-btn filter-btn-unseen' + (S.practiceUnknownOnly ? ' active' : '');
+  unBtn.dataset.cat = 'Unbekannt';
+  unBtn.textContent = 'Unbekannt' + (unknownCount ? ' ' + unknownCount : '');
+  unBtn.addEventListener('click', () => toggleUnknownFilter());
+  wrap.appendChild(unBtn);
+
   // Category buttons are mutually exclusive
-  const cats = ['Unbekannt', 'Alle', 'Demokratie', 'Geschichte', 'Gesellschaft', 'Europa', 'Bundesland'];
+  const cats = ['Alle', 'Demokratie', 'Geschichte', 'Gesellschaft', 'Europa', 'Bundesland'];
   cats.forEach(c => {
     const btn = document.createElement('button');
     btn.className = 'filter-btn' + (c === S.practiceFilter ? ' active' : '');
     btn.dataset.cat = c;
-    btn.textContent = c === 'Unbekannt'
-      ? `${c}${unknownCount ? ' ' + unknownCount : ''}`
-      : c;
+    btn.textContent = c;
     btn.addEventListener('click', () => setPracticeFilter(c));
     wrap.appendChild(btn);
   });
