@@ -1,7 +1,7 @@
 // Entry point — wire up all modules
 
 import { go, initNav } from './nav.js';
-import { initPractice, setPracticeFilter, practiceNext, practiceSkip, refreshPracticeFilters } from './practice.js';
+import { initPractice, setPracticeFilter, practiceNext, practiceSkip, practiceRestart, refreshPracticeFilters } from './practice.js';
 import { initExam, startExam, examNext, examPrev, examReset } from './exam.js';
 import { initOverview, renderOverview, buildStateSelect, changeState, confirmReset } from './overview.js';
 
@@ -19,6 +19,7 @@ Object.assign(window, {
   setPracticeFilter,
   practiceNext,
   practiceSkip,
+  practiceRestart,
   startExam,
   examNext,
   examPrev,

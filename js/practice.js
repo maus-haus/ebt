@@ -84,7 +84,11 @@ export function renderPractice() {
   // Feedback area
   document.getElementById('pqFeedback').innerHTML = '';
   document.getElementById('pqFeedback').className = 'pq-feedback';
-  document.getElementById('pqNextBtn').style.display = 'none';
+  document.getElementById('pqSkipBtn').style.display = '';
+  const nextBtn = document.getElementById('pqNextBtn');
+  nextBtn.textContent = 'Weiter →';
+  nextBtn.onclick = practiceNext;
+  nextBtn.style.display = 'none';
 
   // Counter & progress
   const idx = S.practiceIdx + 1;
@@ -177,10 +181,19 @@ function showDone() {
       </div>`;
   }
   document.getElementById('pqFeedback').innerHTML = '';
-  document.getElementById('pqNextBtn').style.display = 'none';
+  document.getElementById('pqSkipBtn').style.display = 'none';
   document.getElementById('pqCat').textContent = '';
   document.getElementById('pqCounter').textContent = '';
   document.getElementById('pqProg').style.width = '100%';
+  const nextBtn = document.getElementById('pqNextBtn');
+  nextBtn.textContent = 'Neue Runde →';
+  nextBtn.onclick = practiceRestart;
+  nextBtn.style.display = '';
+}
+
+export function practiceRestart() {
+  buildPracticeDeck();
+  renderPractice();
 }
 
 export function setPracticeFilter(cat) {
