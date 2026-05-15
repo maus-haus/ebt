@@ -228,11 +228,18 @@
 
 <!-- ═══════════════════════════════════ CHEATSHEET ═══════════════════════════════════ -->
 <section id="cheatsheet" class="section">
-  <p class="section-subtitle">
-    Kompakte Lernhilfe mit wichtigen Daten und Grundwissen für den Einbürgerungstest.
-  </p>
+  <nav class="cheat-tabs" role="tablist" aria-label="Merkblatt-Themen">
+    <button class="cheat-tab-btn active" data-tab="ct-timeline"  onclick="switchCheatTab('ct-timeline')"  role="tab" aria-selected="true"  aria-controls="ct-timeline">🕰️ Zeitleiste</button>
+    <button class="cheat-tab-btn"        data-tab="ct-feiertage" onclick="switchCheatTab('ct-feiertage')" role="tab" aria-selected="false" aria-controls="ct-feiertage">📅 Feiertage</button>
+    <button class="cheat-tab-btn"        data-tab="ct-staat"     onclick="switchCheatTab('ct-staat')"     role="tab" aria-selected="false" aria-controls="ct-staat">🏛️ Staat</button>
+    <button class="cheat-tab-btn"        data-tab="ct-sozial"    onclick="switchCheatTab('ct-sozial')"    role="tab" aria-selected="false" aria-controls="ct-sozial">🏥 Soziales</button>
+    <button class="cheat-tab-btn"        data-tab="ct-eu"        onclick="switchCheatTab('ct-eu')"        role="tab" aria-selected="false" aria-controls="ct-eu">🇪🇺 EU</button>
+    <button class="cheat-tab-btn"        data-tab="ct-geschichte" onclick="switchCheatTab('ct-geschichte')" role="tab" aria-selected="false" aria-controls="ct-geschichte">🔍 Geschichte</button>
+    <button class="cheat-tab-btn"        data-tab="ct-geo"       onclick="switchCheatTab('ct-geo')"       role="tab" aria-selected="false" aria-controls="ct-geo">🗺️ Geografie</button>
+    <button class="cheat-tab-btn"        data-tab="ct-lerntipps" onclick="switchCheatTab('ct-lerntipps')" role="tab" aria-selected="false" aria-controls="ct-lerntipps">✅ Lerntipps</button>
+  </nav>
 
-  <div class="card">
+  <div id="ct-timeline" class="card cheat-panel" role="tabpanel">
     <div class="section-title">🕰️ Historische Zeitleiste</div>
     <ul class="cheat-list">
       <li><strong>1871</strong> · Gründung des Deutschen Reichs (Kaiserreich)</li>
@@ -256,7 +263,7 @@
     </ul>
   </div>
 
-  <div class="card">
+  <div id="ct-feiertage" class="card cheat-panel" role="tabpanel" hidden>
     <div class="section-title">📅 Gedenk- und Feiertage</div>
     <ul class="cheat-list">
       <li><strong>27. Januar</strong> · Gedenktag für die Opfer des Nationalsozialismus</li>
@@ -267,7 +274,7 @@
     </ul>
   </div>
 
-  <div class="card">
+  <div id="ct-staat" class="card cheat-panel" role="tabpanel" hidden>
     <div class="section-title">🏛️ Staat & Grundordnung</div>
     <ul class="cheat-list">
       <li>Deutschland ist ein <strong>demokratischer und sozialer Bundesstaat</strong> mit <strong>16 Bundesländern</strong>.</li>
@@ -282,7 +289,7 @@
     </ul>
   </div>
 
-  <div class="card">
+  <div id="ct-sozial" class="card cheat-panel" role="tabpanel" hidden>
     <div class="section-title">🏥 Sozialversicherung</div>
     <ul class="cheat-list">
       <li>Das Sozialversicherungssystem hat <strong>5 Säulen</strong>:</li>
@@ -295,7 +302,7 @@
     </ul>
   </div>
 
-  <div class="card">
+  <div id="ct-eu" class="card cheat-panel" role="tabpanel" hidden>
     <div class="section-title">🇪🇺 Europäische Union</div>
     <ul class="cheat-list">
       <li>Deutschland ist <strong>Gründungsmitglied</strong> der EU (1957/58, Römische Verträge).</li>
@@ -307,7 +314,7 @@
     </ul>
   </div>
 
-  <div class="card">
+  <div id="ct-geschichte" class="card cheat-panel" role="tabpanel" hidden>
     <div class="section-title">🔍 Geschichte: Schlüsselpersonen & Ereignisse</div>
     <ul class="cheat-list">
       <li><strong>Konrad Adenauer</strong> – Erster Bundeskanzler (BRD); prägte den Wiederaufbau und Westintegration.</li>
@@ -321,7 +328,7 @@
     </ul>
   </div>
 
-  <div class="card">
+  <div id="ct-geo" class="card cheat-panel" role="tabpanel" hidden>
     <div class="section-title">🗺️ Geografie & Symbole</div>
     <ul class="cheat-list">
       <li>Flächenmäßig größtes Bundesland: <strong>Bayern</strong>; bevölkerungsreichstes: <strong>Nordrhein-Westfalen</strong>.</li>
@@ -335,7 +342,7 @@
     </ul>
   </div>
 
-  <div class="card">
+  <div id="ct-lerntipps" class="card cheat-panel" role="tabpanel" hidden>
     <div class="section-title">✅ Lernstrategie</div>
     <ul class="cheat-list">
       <li>Nutze den Filter <strong>Unbekannt</strong>, bis alle Fragen als bekannt markiert sind.</li>
