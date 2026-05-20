@@ -2,7 +2,7 @@
 
 import { S, save } from './state.js';
 import { QUESTIONS, STATE_QUESTIONS } from './data/questions.js';
-import { getAdvancedCues, getQuestionReadingAid } from './glossary.js';
+import { getAdvancedCues, getQuestionReadingAid, getEnglishSupport } from './glossary.js';
 
 function esc(s) {
   return String(s)
@@ -55,6 +55,49 @@ function getQ() {
 }
 
 function totalQ() { return S.practiceDeck.length; }
+let practiceFlipped = false;
+
+function setPracticeFlip(flipped) {
+  const card = document.getElementById('pqCard');
+  const btn = document.getElementById('pqFlipBtn');
+  if (!card || !btn) return;
+  practiceFlipped = !!flipped;
+  card.classList.toggle('is-flipped', practiceFlipped);
+  btn.textContent = practiceFlipped ? 'DE' : 'EN';
+  btn.setAttribute('aria-pressed', practiceFlipped ? 'true' : 'false');
+  btn.setAttribute(
+    'aria-label',
+    practiceFlipped ? 'Karte drehen: Deutsch anzeigen' : 'Karte drehen: Englisch anzeigen'
+  );
+}
+
+function renderPracticeEnglishBack(q) {
+  const wrap = document.getElementById('pqBack');
+  if (!wrap || !q) return;
+  const english = getEnglishSupport(q);
+  const letters = ['A', 'B', 'C', 'D'];
+  wrap.innerHTML = `
+    <div class="en-back-title">🇬🇧 English support</div>
+    <div class="en-back-note">Quick translation support for this card.</div>
+    <span class="en-back-label">Question</span>
+    <div class="en-back-question">${esc(english?.question || q.text || '')}</div>
+    <span class="en-back-label">Answers</span>
+    <ol class="en-back-list">
+      ${(q.options || []).map((opt, i) => `
+        <li>
+          <div class="en-back-pair">
+            <span><strong>${letters[i]}.</strong> ${esc((english?.options && english.options[i]) || opt)}</span>
+            <span class="en-back-de">${esc(opt)}</span>
+          </div>
+        </li>`).join('')}
+    </ol>`;
+}
+
+export function practiceToggleEnglish() {
+  const q = getQ();
+  if (!q) return;
+  setPracticeFlip(!practiceFlipped);
+}
 
 export function renderPractice() {
   const q = getQ();
@@ -78,6 +121,8 @@ export function renderPractice() {
   // Question text
   document.getElementById('pqText').textContent = q.text;
   renderA1Cues(q);
+  renderPracticeEnglishBack(q);
+  setPracticeFlip(false);
 
   // Answer options
   const optWrap = document.getElementById('pqOptions');
@@ -168,6 +213,7 @@ export function practiceSkip() {
 }
 
 function showDone() {
+  setPracticeFlip(false);
   if (S.practiceUnknownOnly) {
     const scope = S.practiceFilter === 'Alle' ? 'alle Kategorien' : `Kategorie „${S.practiceFilter}“`;
     document.getElementById('pqText').textContent = '🎉 Alle unbekannten Fragen sitzen!';

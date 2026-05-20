@@ -1,4 +1,4 @@
-const CACHE = 'ebt-v4';
+const CACHE = 'ebt-v5';
 const offlineResponse = () =>
   new Response('Offline – bitte später erneut versuchen.', {
     status: 503,
