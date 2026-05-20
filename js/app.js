@@ -6,12 +6,20 @@ import { initExam, startExam, examNext, examPrev, examReset } from './exam.js';
 import { initOverview, renderOverview, buildStateSelect, changeState, confirmReset, toggleA1Cues } from './overview.js';
 import { ADVANCED_GLOSSARY } from './glossary.js';
 
+function esc(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 function renderA1Glossary() {
   const wrap = document.getElementById('a1GlossaryList');
   if (!wrap || wrap._ready) return;
   wrap._ready = true;
   wrap.innerHTML = ADVANCED_GLOSSARY.map(item =>
-    `<div class="a1-glossary-item"><span class="a1-glossary-de">${item.de}</span><span class="a1-glossary-en">${item.en}</span></div>`
+    `<div class="a1-glossary-item"><span class="a1-glossary-de">${esc(item.de)}</span><span class="a1-glossary-en">${esc(item.en)}</span></div>`
   ).join('');
 }
 
