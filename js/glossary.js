@@ -33,6 +33,28 @@ export const ADVANCED_GLOSSARY = [
   { de: 'Verhältnismäßigkeit', en: 'principle of proportionality' },
 ];
 
+const SIMPLE_TERM_HINTS = [
+  { variants: ['nicht'], hint: '„NICHT“ ist wichtig: Suche die Antwort, die nicht passt.' },
+  { variants: ['zweiten weltkrieg', '2. weltkrieg'], hint: '„Zweiter Weltkrieg“: Krieg von 1939 bis 1945.' },
+  { variants: ['besetzung', 'besatzungszone', 'besatzungszonen'], hint: '„Besetzung“: Ein Land kontrolliert ein anderes Land.' },
+  { variants: ['beteiligt'], hint: '„beteiligt“ bedeutet „dabei / mitgemacht“.' },
+  { variants: ['währungsreform'], hint: '„Währungsreform“: neues Geld wird eingeführt.' },
+  { variants: ['wiedervereinigung'], hint: '„Wiedervereinigung“: DDR und BRD wurden ein Land.' },
+];
+
+const SIMPLE_QUESTION_REWRITES = [
+  {
+    test: /^welches land war nach dem zweiten weltkrieg nicht an der besetzung deutschlands beteiligt\?$/i,
+    simple: 'Nach dem 2. Weltkrieg haben einige Länder Deutschland besetzt. Welches Land war nicht dabei?',
+  },
+];
+
+const SIMPLE_QUESTION_REPLACEMENTS = [
+  [/nach dem Zweiten Weltkrieg/gi, 'nach 1945 (nach dem 2. Weltkrieg)'],
+  [/an der Besetzung Deutschlands beteiligt/gi, 'bei der Besetzung von Deutschland dabei'],
+  [/Besatzungszonen Deutschlands nach 1945/gi, 'Gebiete in Deutschland nach 1945 (Besatzungszonen)'],
+];
+
 const MATCH_TERMS = [
   { de: 'Gewaltenteilung', en: 'separation of powers', variants: ['gewaltenteilung'] },
   { de: 'Rechtsstaat', en: 'constitutional state / rule of law', variants: ['rechtsstaat'] },
@@ -106,4 +128,42 @@ export function getAdvancedCues(question, max = 6) {
   }
   hits.sort((a, b) => a.idx - b.idx);
   return hits.slice(0, max).map(({ de, en }) => ({ de, en }));
+}
+
+export function getQuestionReadingAid(question, maxHints = 3) {
+  if (!question || !question.text) return null;
+  const original = String(question.text).trim();
+  if (!original) return null;
+
+  const normalized = normalize(original);
+  const notes = [];
+
+  if (/\bnicht\b/i.test(original)) {
+    notes.push('Achte auf „NICHT“: Du suchst die Antwort, die nicht passt.');
+  }
+  if (/^(welche|welcher|welches|was)\b/i.test(original)) {
+    notes.push('Wähle eine Antwort aus den vier Optionen.');
+  }
+
+  const hints = SIMPLE_TERM_HINTS
+    .filter(item => item.variants.some(v => normalized.includes(normalize(v))))
+    .slice(0, maxHints)
+    .map(item => item.hint);
+
+  let simple = null;
+  const exact = SIMPLE_QUESTION_REWRITES.find(item => item.test.test(original));
+  if (exact) {
+    simple = exact.simple;
+  } else {
+    const rewritten = SIMPLE_QUESTION_REPLACEMENTS.reduce(
+      (acc, [pattern, replacement]) => acc.replace(pattern, replacement),
+      original
+    );
+    if (rewritten !== original) {
+      simple = rewritten;
+    }
+  }
+
+  if (!simple && !notes.length && !hints.length) return null;
+  return { simple, notes, hints };
 }

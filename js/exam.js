@@ -2,7 +2,7 @@
 
 import { S, save } from './state.js';
 import { QUESTIONS, STATE_QUESTIONS } from './data/questions.js';
-import { getAdvancedCues } from './glossary.js';
+import { getAdvancedCues, getQuestionReadingAid } from './glossary.js';
 
 const EXAM_TOTAL = 33;
 const EXAM_GENERAL = 30;
@@ -177,17 +177,27 @@ function renderA1Cues(q) {
     return;
   }
   const cues = getAdvancedCues(q);
-  if (!cues.length) {
+  const readingAid = getQuestionReadingAid(q);
+  if (!cues.length && !readingAid) {
     wrap.hidden = true;
     wrap.innerHTML = '';
     return;
   }
+  const readingBlock = readingAid
+    ? `<div class="a1-read-wrap">
+        <div class="a1-read-title">🪜 Einfach lesen</div>
+        ${readingAid.simple ? `<p class="a1-read-text">${esc(readingAid.simple)}</p>` : ''}
+        ${readingAid.notes.length ? `<ul class="a1-read-list">${readingAid.notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul>` : ''}
+        ${readingAid.hints.length ? `<div class="a1-read-hints">${readingAid.hints.map(h => `<span class="a1-read-chip">${esc(h)}</span>`).join('')}</div>` : ''}
+      </div>`
+    : '';
   wrap.hidden = false;
   wrap.innerHTML =
-    `<div class="a1-cue-title">🧩 Wort-Hilfe (über A1)</div>
+    `${readingBlock}
+     <div class="a1-cue-title">🧩 Wort-Hilfe (über A1)</div>
      <div class="a1-cue-list">${
-      cues.map(c => `<span class="a1-cue-chip"><strong>${esc(c.de)}</strong> = ${esc(c.en)}</span>`).join('')
-    }</div>`;
+       cues.map(c => `<span class="a1-cue-chip"><strong>${esc(c.de)}</strong> = ${esc(c.en)}</span>`).join('')
+     }</div>`;
 }
 
 export function refreshExamView() {

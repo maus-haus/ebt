@@ -239,6 +239,43 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
   background:rgba(167,139,250,.12);
 }
 .a1-cue-chip strong{font-weight:700}
+.a1-read-wrap{
+  background:rgba(92,133,252,.08);
+  border:1px solid rgba(92,133,252,.28);
+  border-radius:10px;
+  padding:.6rem .7rem;
+  margin-bottom:.65rem;
+}
+.a1-read-title{
+  font-size:.78rem;
+  color:var(--accent);
+  font-weight:700;
+  margin-bottom:.35rem;
+}
+.a1-read-text{
+  font-size:.86rem;
+  line-height:1.55;
+  margin-bottom:.35rem;
+}
+.a1-read-list{
+  margin:.2rem 0 .35rem 1rem;
+  color:var(--muted);
+  font-size:.8rem;
+  line-height:1.45;
+}
+.a1-read-hints{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.35rem;
+}
+.a1-read-chip{
+  font-size:.74rem;
+  border:1px solid rgba(92,133,252,.35);
+  border-radius:999px;
+  padding:.2rem .5rem;
+  background:rgba(92,133,252,.12);
+  color:var(--text);
+}
 
 /* ── Cheatsheet ── */
 .cheat-tabs{
