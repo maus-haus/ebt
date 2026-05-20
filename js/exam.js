@@ -2,7 +2,7 @@
 
 import { S, save } from './state.js';
 import { QUESTIONS, STATE_QUESTIONS } from './data/questions.js';
-import { getAdvancedCues, getQuestionReadingAid, getEnglishSupport } from './glossary.js';
+import { getAdvancedCues, getQuestionReadingAid, getEnglishSupport, EN_FLIP_LABEL } from './glossary.js';
 
 const EXAM_TOTAL = 33;
 const EXAM_GENERAL = 30;
@@ -34,7 +34,7 @@ function setExamFlip(flipped) {
   if (!card || !btn) return;
   examFlipped = !!flipped;
   card.classList.toggle('is-flipped', examFlipped);
-  btn.textContent = 'EN ⇄ DE';
+  btn.textContent = EN_FLIP_LABEL;
   btn.setAttribute('aria-pressed', examFlipped ? 'true' : 'false');
   btn.setAttribute(
     'aria-label',
@@ -49,7 +49,7 @@ function renderExamEnglishBack(q) {
   const letters = ['A', 'B', 'C', 'D'];
   wrap.innerHTML = `
     <div class="en-back-title">🇬🇧 English support</div>
-    <div class="en-back-note">Tap EN ⇄ DE to switch views.</div>
+    <div class="en-back-note">Tap ${EN_FLIP_LABEL} to switch views.</div>
     <span class="en-back-label">Question</span>
     <div class="en-back-question">${esc(english?.question || q.text || '')}</div>
     <span class="en-back-label">Answers</span>

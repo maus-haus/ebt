@@ -33,6 +33,8 @@ export const ADVANCED_GLOSSARY = [
   { de: 'Verhältnismäßigkeit', en: 'principle of proportionality' },
 ];
 
+export const EN_FLIP_LABEL = 'EN ⇄ DE';
+
 const SIMPLE_TERM_HINTS = [
   { variants: ['nicht'], hint: '„NICHT“ ist wichtig: Suche die Antwort, die nicht passt.' },
   { variants: ['zweiten weltkrieg', '2. weltkrieg'], hint: '„Zweiter Weltkrieg“: Krieg von 1939 bis 1945.' },
