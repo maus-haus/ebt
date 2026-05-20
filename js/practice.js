@@ -63,7 +63,7 @@ function setPracticeFlip(flipped) {
   if (!card || !btn) return;
   practiceFlipped = !!flipped;
   card.classList.toggle('is-flipped', practiceFlipped);
-  btn.textContent = practiceFlipped ? 'DE' : 'EN';
+  btn.textContent = 'EN ⇄ DE';
   btn.setAttribute('aria-pressed', practiceFlipped ? 'true' : 'false');
   btn.setAttribute(
     'aria-label',
@@ -78,7 +78,7 @@ function renderPracticeEnglishBack(q) {
   const letters = ['A', 'B', 'C', 'D'];
   wrap.innerHTML = `
     <div class="en-back-title">🇬🇧 English support</div>
-    <div class="en-back-note">Quick translation support for this card.</div>
+    <div class="en-back-note">Tap EN ⇄ DE to switch views.</div>
     <span class="en-back-label">Question</span>
     <div class="en-back-question">${esc(english?.question || q.text || '')}</div>
     <span class="en-back-label">Answers</span>

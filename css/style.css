@@ -57,42 +57,64 @@ header .de-flag{font-size:1.3rem}
 }
 .q-card{
   position:relative;
-  padding-top:2.4rem;
+  overflow:hidden;
 }
 .q-flip-btn{
   position:absolute;
-  top:.65rem;
-  right:.75rem;
+  top:.8rem;
+  right:.85rem;
   z-index:2;
-  border:1px solid var(--border);
-  background:var(--card);
+  border:1px solid rgba(167,139,250,.45);
+  background:rgba(34,34,58,.92);
   color:var(--text);
   border-radius:999px;
-  min-width:2.15rem;
-  height:1.8rem;
-  padding:0 .55rem;
-  font-size:.72rem;
+  min-width:3.7rem;
+  height:1.95rem;
+  padding:0 .75rem;
+  font-size:.71rem;
+  letter-spacing:.02em;
   font-weight:700;
   cursor:pointer;
+  box-shadow:0 3px 10px rgba(0,0,0,.25);
+  transition:transform .15s,background .15s,border-color .15s;
 }
-.q-flip-btn:active{opacity:.85}
-.q-face{animation:q-flip-in .2s ease}
+.q-flip-btn:hover{
+  border-color:rgba(167,139,250,.75);
+  background:rgba(54,54,88,.95);
+}
+.q-flip-btn:active{
+  transform:translateY(1px) scale(.98);
+}
+.q-card .pq-header,
+.q-card .eq-header{
+  padding-right:4.25rem;
+}
+.q-face{
+  animation:q-flip-in .22s ease;
+}
 .q-back{display:none}
 .q-card.is-flipped .q-front{display:none}
-.q-card.is-flipped .q-back{display:block}
+.q-card.is-flipped .q-back{
+  display:block;
+  background:linear-gradient(180deg, rgba(167,139,250,.08), rgba(92,133,252,.06));
+  border:1px solid rgba(167,139,250,.3);
+  border-radius:12px;
+  padding:.9rem .95rem .95rem;
+  margin-top:.1rem;
+}
 @keyframes q-flip-in{
-  from{opacity:.3;transform:perspective(500px) rotateY(78deg)}
+  from{opacity:.2;transform:perspective(500px) rotateY(62deg)}
   to{opacity:1;transform:perspective(500px) rotateY(0)}
 }
 .en-back-title{
   font-size:.95rem;
   font-weight:700;
-  margin-bottom:.7rem;
+  margin-bottom:.5rem;
 }
 .en-back-note{
-  font-size:.78rem;
+  font-size:.76rem;
   color:var(--muted);
-  margin-bottom:.75rem;
+  margin-bottom:.65rem;
   line-height:1.4;
 }
 .en-back-label{
@@ -107,7 +129,7 @@ header .de-flag{font-size:1.3rem}
 .en-back-question{
   font-size:.97rem;
   line-height:1.55;
-  margin-bottom:.8rem;
+  margin-bottom:.7rem;
 }
 .en-back-list{
   margin:0;

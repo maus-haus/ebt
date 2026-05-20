@@ -34,7 +34,7 @@ function setExamFlip(flipped) {
   if (!card || !btn) return;
   examFlipped = !!flipped;
   card.classList.toggle('is-flipped', examFlipped);
-  btn.textContent = examFlipped ? 'DE' : 'EN';
+  btn.textContent = 'EN ⇄ DE';
   btn.setAttribute('aria-pressed', examFlipped ? 'true' : 'false');
   btn.setAttribute(
     'aria-label',
@@ -49,7 +49,7 @@ function renderExamEnglishBack(q) {
   const letters = ['A', 'B', 'C', 'D'];
   wrap.innerHTML = `
     <div class="en-back-title">🇬🇧 English support</div>
-    <div class="en-back-note">Quick translation support for this card.</div>
+    <div class="en-back-note">Tap EN ⇄ DE to switch views.</div>
     <span class="en-back-label">Question</span>
     <div class="en-back-question">${esc(english?.question || q.text || '')}</div>
     <span class="en-back-label">Answers</span>
