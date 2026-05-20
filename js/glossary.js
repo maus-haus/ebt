@@ -207,7 +207,7 @@ export function getAdvancedCues(question, max = 6) {
     const indexes = term.regexes
       .map(re => {
         const m = text.match(re);
-        if (!m || m.index === undefined) return -1;
+        if (!m) return -1;
         const startOffset = m[1] ? m[1].length : 0;
         return m.index + startOffset;
       })
