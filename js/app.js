@@ -4,13 +4,13 @@ import { go, initNav } from './nav.js';
 import { initPractice, setPracticeFilter, practiceNext, practiceSkip, refreshPracticeFilters } from './practice.js';
 import { initExam, startExam, examNext, examPrev, examReset } from './exam.js';
 import { initOverview, renderOverview, buildStateSelect, changeState, confirmReset, toggleA1Cues } from './overview.js';
-import { A1_GLOSSARY } from './glossary.js';
+import { ADVANCED_GLOSSARY } from './glossary.js';
 
 function renderA1Glossary() {
   const wrap = document.getElementById('a1GlossaryList');
   if (!wrap || wrap._ready) return;
   wrap._ready = true;
-  wrap.innerHTML = A1_GLOSSARY.map(item =>
+  wrap.innerHTML = ADVANCED_GLOSSARY.map(item =>
     `<div class="a1-glossary-item"><span class="a1-glossary-de">${item.de}</span><span class="a1-glossary-en">${item.en}</span></div>`
   ).join('');
 }

@@ -2,7 +2,7 @@
 
 import { S, save } from './state.js';
 import { QUESTIONS, STATE_QUESTIONS } from './data/questions.js';
-import { getA1Cues } from './glossary.js';
+import { getAdvancedCues } from './glossary.js';
 
 function shuffle(arr) {
   return arr.slice().sort(() => Math.random() - 0.5);
@@ -198,7 +198,7 @@ function renderA1Cues(q) {
     wrap.innerHTML = '';
     return;
   }
-  const cues = getA1Cues(q);
+  const cues = getAdvancedCues(q);
   if (!cues.length) {
     wrap.hidden = true;
     wrap.innerHTML = '';
@@ -206,7 +206,7 @@ function renderA1Cues(q) {
   }
   wrap.hidden = false;
   wrap.innerHTML =
-    `<div class="a1-cue-title">🧩 A1-Hilfe</div>
+    `<div class="a1-cue-title">🧩 Wort-Hilfe (über A1)</div>
      <div class="a1-cue-list">${
       cues.map(c => `<span class="a1-cue-chip"><strong>${c.de}</strong> = ${c.en}</span>`).join('')
     }</div>`;
