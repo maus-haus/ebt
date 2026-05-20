@@ -75,13 +75,24 @@ function normalize(text) {
     .replace(/ß/g, 'ss');
 }
 
+function escapeRegex(text) {
+  return String(text).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 export function getAdvancedCues(question, max = 6) {
   if (!question) return [];
   const text = normalize([question.text, ...(question.options || [])].join(' '));
   const hits = [];
   for (const term of MATCH_TERMS) {
     const indexes = term.variants
-      .map(v => text.indexOf(normalize(v)))
+      .map(v => {
+        const needle = normalize(v);
+        const re = new RegExp(`(^|[^a-z0-9_])${escapeRegex(needle)}([^a-z0-9_]|$)`);
+        const m = text.match(re);
+        if (!m || m.index === undefined) return -1;
+        const startOffset = m[1] ? m[1].length : 0;
+        return m.index + startOffset;
+      })
       .filter(i => i >= 0);
     if (!indexes.length) continue;
     hits.push({ de: term.de, en: term.en, idx: Math.min(...indexes) });

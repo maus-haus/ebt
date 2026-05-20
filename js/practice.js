@@ -4,6 +4,14 @@ import { S, save } from './state.js';
 import { QUESTIONS, STATE_QUESTIONS } from './data/questions.js';
 import { getAdvancedCues } from './glossary.js';
 
+function esc(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 function shuffle(arr) {
   return arr.slice().sort(() => Math.random() - 0.5);
 }
@@ -208,7 +216,7 @@ function renderA1Cues(q) {
   wrap.innerHTML =
     `<div class="a1-cue-title">🧩 Wort-Hilfe (über A1)</div>
      <div class="a1-cue-list">${
-      cues.map(c => `<span class="a1-cue-chip"><strong>${c.de}</strong> = ${c.en}</span>`).join('')
+      cues.map(c => `<span class="a1-cue-chip"><strong>${esc(c.de)}</strong> = ${esc(c.en)}</span>`).join('')
     }</div>`;
 }
 
