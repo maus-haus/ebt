@@ -275,6 +275,12 @@ function translateGermanToEnglish(text) {
 
 export function getEnglishSupport(question) {
   if (!question) return null;
+  if (question.textEn) {
+    return {
+      question: question.textEn,
+      options: question.optionsEn || (question.options || []).map(opt => translateGermanToEnglish(opt)),
+    };
+  }
   return {
     question: translateGermanToEnglish(question.text || ''),
     options: (question.options || []).map(opt => translateGermanToEnglish(opt)),
