@@ -76,21 +76,22 @@ function renderPracticeEnglishBack(q) {
   if (!wrap || !q) return;
   const english = getEnglishSupport(q);
   const letters = ['A', 'B', 'C', 'D'];
+  const enQuestion = (english?.question || '').trim();
+  const deQuestion = (q.text || '').trim();
   wrap.innerHTML = `
-    <div class="en-back-title">🇬🇧 English support</div>
-    <div class="en-back-note">Tap ${EN_FLIP_LABEL} to switch views.</div>
     <span class="en-back-label">Question</span>
-    <div class="en-back-question">${esc(english?.question || q.text || '')}</div>
+    <div class="en-back-question">EN: ${esc(enQuestion || deQuestion)}</div>
+    <div class="en-back-de">DE: ${esc(deQuestion)}</div>
     <span class="en-back-label">Answers</span>
-    <ol class="en-back-list">
+    <ul class="en-back-list">
       ${(q.options || []).map((opt, i) => `
         <li>
           <div class="en-back-pair">
-            <span><strong>${letters[i]}.</strong> ${esc((english?.options && english.options[i]) || opt)}</span>
-            <span class="en-back-de">${esc(opt)}</span>
+            <span><strong>${letters[i]}.</strong> EN: ${esc((english?.options && english.options[i]) || opt)}</span>
+            <span class="en-back-de">DE: ${esc(opt)}</span>
           </div>
         </li>`).join('')}
-    </ol>`;
+    </ul>`;
 }
 
 export function practiceToggleEnglish() {
