@@ -77,18 +77,28 @@ function renderPracticeEnglishBack(q) {
   const english = getEnglishSupport(q);
   const letters = ['A', 'B', 'C', 'D'];
   const enQuestion = (english?.question || '').trim();
+  const idx = S.practiceIdx + 1;
+  const total = totalQ();
+  const progress = ((idx - 1) / total * 100);
+  const imageBlock = q.image
+    ? `<div class="q-img-wrap"><img class="q-img" src="/images/questions/${esc(q.image)}" alt="${esc(enQuestion || q.text)}"></div>`
+    : '';
   wrap.innerHTML = `
-    <span class="en-back-label">Question</span>
-    <div class="en-back-question">${esc(enQuestion || 'English translation unavailable')}</div>
-    <span class="en-back-label">Answers</span>
-    <ul class="en-back-list">
+    <div class="pq-header">
+      <span class="pq-counter">${idx} / ${total}</span>
+      <span class="pq-cat">${esc(q.cat)}</span>
+    </div>
+    <div class="pq-progbar"><div class="pq-progfill" style="width:${progress}%"></div></div>
+    ${imageBlock}
+    <p class="pq-text">${esc(enQuestion || 'English translation unavailable')}</p>
+    <div>
       ${(q.options || []).map((opt, i) => `
-        <li>
-          <div class="en-back-pair">
-            <span><strong>${letters[i]}.</strong> ${esc((english?.options && english.options[i] || '').trim() || 'English translation unavailable')}</span>
-          </div>
-        </li>`).join('')}
-    </ul>`;
+        <button type="button" class="opt-btn" disabled aria-disabled="true">
+          <span class="opt-letter">${letters[i]}</span>
+          <span class="opt-text">${esc((english?.options && english.options[i] || '').trim() || 'English translation unavailable')}</span>
+        </button>`).join('')}
+    </div>
+    <div class="pq-feedback"></div>`;
 }
 
 export function practiceToggleEnglish() {
