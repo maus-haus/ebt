@@ -79,15 +79,22 @@ function escapeRegex(text) {
   return String(text).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+const MATCH_TERMS_COMPILED = MATCH_TERMS.map(term => ({
+  de: term.de,
+  en: term.en,
+  regexes: term.variants.map(v => {
+    const needle = normalize(v);
+    return new RegExp(`(^|[^a-z0-9_])${escapeRegex(needle)}([^a-z0-9_]|$)`);
+  }),
+}));
+
 export function getAdvancedCues(question, max = 6) {
   if (!question) return [];
   const text = normalize([question.text, ...(question.options || [])].join(' '));
   const hits = [];
-  for (const term of MATCH_TERMS) {
-    const indexes = term.variants
-      .map(v => {
-        const needle = normalize(v);
-        const re = new RegExp(`(^|[^a-z0-9_])${escapeRegex(needle)}([^a-z0-9_]|$)`);
+  for (const term of MATCH_TERMS_COMPILED) {
+    const indexes = term.regexes
+      .map(re => {
         const m = text.match(re);
         if (!m || m.index === undefined) return -1;
         const startOffset = m[1] ? m[1].length : 0;
