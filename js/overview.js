@@ -2,7 +2,7 @@
 
 import { S, save, resetProgress } from './state.js';
 import { QUESTIONS, STATES } from './data/questions.js';
-import { examReset } from './exam.js';
+import { examReset, refreshExamView } from './exam.js';
 import { buildPracticeDeck, renderPractice } from './practice.js';
 
 export function initOverview() {
@@ -29,6 +29,10 @@ export function renderOverview() {
   const sel = document.getElementById('stateSelect');
   if (sel) {
     sel.value = S.state;
+  }
+  const a1Toggle = document.getElementById('a1Toggle');
+  if (a1Toggle) {
+    a1Toggle.checked = S.a1Cues;
   }
 }
 
@@ -63,4 +67,12 @@ export function buildStateSelect() {
   });
   sel.value = S.state;
   sel.addEventListener('change', () => changeState(sel.value));
+}
+
+export function toggleA1Cues(enabled) {
+  S.a1Cues = Boolean(enabled);
+  save();
+  renderPractice();
+  refreshExamView();
+  renderOverview();
 }

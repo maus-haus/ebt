@@ -2,6 +2,7 @@
 
 import { S, save } from './state.js';
 import { QUESTIONS, STATE_QUESTIONS } from './data/questions.js';
+import { getA1Cues } from './glossary.js';
 
 const EXAM_TOTAL = 33;
 const EXAM_GENERAL = 30;
@@ -65,6 +66,7 @@ function renderExamQ() {
   }
 
   document.getElementById('eqText').textContent = q.text;
+  renderA1Cues(q);
   document.getElementById('eqCat').textContent = q.cat;
 
   const wrap = document.getElementById('eqOptions');
@@ -164,6 +166,34 @@ export function examReset() {
 
   // Update state name in intro
   document.getElementById('examStateName').textContent = S.state;
+}
+
+function renderA1Cues(q) {
+  const wrap = document.getElementById('eqCueWrap');
+  if (!wrap) return;
+  if (!S.a1Cues) {
+    wrap.hidden = true;
+    wrap.innerHTML = '';
+    return;
+  }
+  const cues = getA1Cues(q);
+  if (!cues.length) {
+    wrap.hidden = true;
+    wrap.innerHTML = '';
+    return;
+  }
+  wrap.hidden = false;
+  wrap.innerHTML =
+    `<div class="a1-cue-title">🧩 A1-Hilfe</div>
+     <div class="a1-cue-list">${
+      cues.map(c => `<span class="a1-cue-chip"><strong>${esc(c.de)}</strong> = ${esc(c.en)}</span>`).join('')
+    }</div>`;
+}
+
+export function refreshExamView() {
+  if (examActive && examDeck.length) {
+    renderExamQ();
+  }
 }
 
 export function initExam() {

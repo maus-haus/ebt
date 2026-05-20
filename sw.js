@@ -1,4 +1,4 @@
-const CACHE = 'ebt-v3';
+const CACHE = 'ebt-v4';
 const offlineResponse = () =>
   new Response('Offline – bitte später erneut versuchen.', {
     status: 503,
@@ -14,6 +14,7 @@ const ASSETS = [
   '/js/practice.js',
   '/js/exam.js',
   '/js/overview.js',
+  '/js/glossary.js',
   '/js/data/questions.js',
   '/manifest.json',
   '/images/questions/general_21_question.png',

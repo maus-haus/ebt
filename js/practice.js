@@ -2,6 +2,7 @@
 
 import { S, save } from './state.js';
 import { QUESTIONS, STATE_QUESTIONS } from './data/questions.js';
+import { getA1Cues } from './glossary.js';
 
 function shuffle(arr) {
   return arr.slice().sort(() => Math.random() - 0.5);
@@ -68,6 +69,7 @@ export function renderPractice() {
 
   // Question text
   document.getElementById('pqText').textContent = q.text;
+  renderA1Cues(q);
 
   // Answer options
   const optWrap = document.getElementById('pqOptions');
@@ -178,9 +180,36 @@ function showDone() {
   }
   document.getElementById('pqFeedback').innerHTML = '';
   document.getElementById('pqNextBtn').style.display = 'none';
+  const cueWrap = document.getElementById('pqCueWrap');
+  if (cueWrap) {
+    cueWrap.hidden = true;
+    cueWrap.innerHTML = '';
+  }
   document.getElementById('pqCat').textContent = '';
   document.getElementById('pqCounter').textContent = '';
   document.getElementById('pqProg').style.width = '100%';
+}
+
+function renderA1Cues(q) {
+  const wrap = document.getElementById('pqCueWrap');
+  if (!wrap) return;
+  if (!S.a1Cues) {
+    wrap.hidden = true;
+    wrap.innerHTML = '';
+    return;
+  }
+  const cues = getA1Cues(q);
+  if (!cues.length) {
+    wrap.hidden = true;
+    wrap.innerHTML = '';
+    return;
+  }
+  wrap.hidden = false;
+  wrap.innerHTML =
+    `<div class="a1-cue-title">🧩 A1-Hilfe</div>
+     <div class="a1-cue-list">${
+      cues.map(c => `<span class="a1-cue-chip"><strong>${c.de}</strong> = ${c.en}</span>`).join('')
+    }</div>`;
 }
 
 export function setPracticeFilter(cat) {

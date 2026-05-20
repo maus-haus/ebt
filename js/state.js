@@ -16,6 +16,9 @@ export const S = {
 
   // State (Bundesland) selection
   state: 'Baden-Württemberg',
+
+  // Accessibility
+  a1Cues: false,
 };
 
 const KEY = 'ebt_v1';
@@ -28,6 +31,7 @@ try {
   if (d.examDone)  S.examDone  = d.examDone;
   if (d.examBest !== undefined) S.examBest = d.examBest;
   if (d.state)     S.state     = d.state;
+  if (d.a1Cues !== undefined) S.a1Cues = Boolean(d.a1Cues);
 } catch (e) { /* ignore corrupt data */ }
 
 export function save() {
@@ -38,6 +42,7 @@ export function save() {
     examDone:  S.examDone,
     examBest:  S.examBest,
     state:     S.state,
+    a1Cues:    S.a1Cues,
   }));
 }
 

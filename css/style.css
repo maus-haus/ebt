@@ -188,9 +188,57 @@ header .de-flag{font-size:1.3rem}
 /* ── Section headers ── */
 .section-title{font-size:1.1rem;font-weight:700;margin-bottom:1rem}
 .section-subtitle{font-size:.85rem;color:var(--muted);margin-bottom:1rem;line-height:1.5}
+.toggle-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:1rem;
+}
+.toggle-label{font-size:.92rem;line-height:1.4}
+#a1Toggle{
+  width:1.15rem;
+  height:1.15rem;
+  accent-color:var(--accent);
+  cursor:pointer;
+}
+.a1-toggle-note{
+  margin-top:.6rem;
+  font-size:.82rem;
+  color:var(--muted);
+  line-height:1.5;
+}
 
 /* ── Misc ── */
 hr.divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
+
+/* ── A1 cues ── */
+.a1-cues{
+  background:rgba(167,139,250,.08);
+  border:1px solid rgba(167,139,250,.3);
+  border-radius:10px;
+  padding:.65rem .75rem;
+  margin:-.4rem 0 .9rem;
+}
+.a1-cue-title{
+  font-size:.78rem;
+  color:var(--accent2);
+  font-weight:700;
+  margin-bottom:.45rem;
+}
+.a1-cue-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.4rem;
+}
+.a1-cue-chip{
+  font-size:.76rem;
+  border:1px solid rgba(167,139,250,.35);
+  border-radius:999px;
+  padding:.2rem .55rem;
+  color:var(--text);
+  background:rgba(167,139,250,.12);
+}
+.a1-cue-chip strong{font-weight:700}
 
 /* ── Cheatsheet ── */
 .cheat-tabs{
@@ -231,3 +279,20 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
   line-height:1.5;
 }
 .cheat-list li strong{color:var(--text)}
+.a1-glossary-note{margin-bottom:.75rem}
+.a1-glossary-list{
+  display:flex;
+  flex-direction:column;
+  gap:.45rem;
+}
+.a1-glossary-item{
+  display:flex;
+  justify-content:space-between;
+  gap:1rem;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:.55rem .7rem;
+}
+.a1-glossary-de{font-weight:600}
+.a1-glossary-en{color:var(--muted);text-align:right}

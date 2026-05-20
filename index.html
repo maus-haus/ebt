@@ -64,6 +64,16 @@
     und im Übungsmodus erscheinen.
   </p>
 
+  <!-- Accessibility -->
+  <div class="card">
+    <div class="section-title">🧩 Sprachhilfe (A1)</div>
+    <label class="toggle-row" for="a1Toggle">
+      <span class="toggle-label">Vokabel-Hinweise auf Karten anzeigen</span>
+      <input id="a1Toggle" type="checkbox" onchange="toggleA1Cues(this.checked)">
+    </label>
+    <p class="a1-toggle-note">Zeigt kurze Übersetzungen zu häufigen Wörtern in den Fragen und Antworten.</p>
+  </div>
+
   <!-- State selector -->
   <div class="card">
     <div class="state-selector-wrap">
@@ -143,6 +153,7 @@
     <div class="pq-progbar"><div id="pqProg" class="pq-progfill" style="width:0%"></div></div>
     <div id="pqImgWrap" class="q-img-wrap" style="display:none"><img id="pqImg" class="q-img" alt=""></div>
     <p class="pq-text" id="pqText">Lade Fragen…</p>
+    <div id="pqCueWrap" class="a1-cues" hidden></div>
     <div id="pqOptions"></div>
     <div id="pqFeedback" class="pq-feedback"></div>
     <div class="btn-row">
@@ -198,6 +209,7 @@
       <div class="eq-progbar"><div id="eqProg" class="eq-progfill" style="width:0%"></div></div>
       <div id="eqImgWrap" class="q-img-wrap" style="display:none"><img id="eqImg" class="q-img" alt=""></div>
       <p class="eq-text" id="eqText"></p>
+      <div id="eqCueWrap" class="a1-cues" hidden></div>
       <div id="eqOptions"></div>
       <div class="exam-nav-row">
         <button class="btn btn-secondary" id="examPrevBtn" onclick="examPrev()">← Zurück</button>
@@ -229,7 +241,8 @@
 <!-- ═══════════════════════════════════ CHEATSHEET ═══════════════════════════════════ -->
 <section id="cheatsheet" class="section">
   <nav class="cheat-tabs" role="tablist" aria-label="Merkblatt-Themen">
-    <button class="cheat-tab-btn active" data-tab="ct-timeline"  onclick="switchCheatTab('ct-timeline')"  role="tab" aria-selected="true"  aria-controls="ct-timeline">🕰️ Zeitleiste</button>
+    <button class="cheat-tab-btn active" data-tab="ct-glossar"  onclick="switchCheatTab('ct-glossar')"  role="tab" aria-selected="true"  aria-controls="ct-glossar">📘 Glossar</button>
+    <button class="cheat-tab-btn"        data-tab="ct-timeline"  onclick="switchCheatTab('ct-timeline')"  role="tab" aria-selected="false" aria-controls="ct-timeline">🕰️ Zeitleiste</button>
     <button class="cheat-tab-btn"        data-tab="ct-feiertage" onclick="switchCheatTab('ct-feiertage')" role="tab" aria-selected="false" aria-controls="ct-feiertage">📅 Feiertage</button>
     <button class="cheat-tab-btn"        data-tab="ct-staat"     onclick="switchCheatTab('ct-staat')"     role="tab" aria-selected="false" aria-controls="ct-staat">🏛️ Staat</button>
     <button class="cheat-tab-btn"        data-tab="ct-sozial"    onclick="switchCheatTab('ct-sozial')"    role="tab" aria-selected="false" aria-controls="ct-sozial">🏥 Soziales</button>
@@ -239,7 +252,13 @@
     <button class="cheat-tab-btn"        data-tab="ct-lerntipps" onclick="switchCheatTab('ct-lerntipps')" role="tab" aria-selected="false" aria-controls="ct-lerntipps">✅ Lerntipps</button>
   </nav>
 
-  <div id="ct-timeline" class="card cheat-panel" role="tabpanel">
+  <div id="ct-glossar" class="card cheat-panel" role="tabpanel">
+    <div class="section-title">📘 A1-Glossar</div>
+    <p class="section-subtitle a1-glossary-note">Grundwörter mit einfacher englischer Bedeutung.</p>
+    <div id="a1GlossaryList" class="a1-glossary-list"></div>
+  </div>
+
+  <div id="ct-timeline" class="card cheat-panel" role="tabpanel" hidden>
     <div class="section-title">🕰️ Historische Zeitleiste</div>
     <ul class="cheat-list">
       <li><strong>1871</strong> · Gründung des Deutschen Reichs (Kaiserreich)</li>
