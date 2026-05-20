@@ -48,18 +48,15 @@ function renderExamEnglishBack(q) {
   const english = getEnglishSupport(q);
   const letters = ['A', 'B', 'C', 'D'];
   const enQuestion = (english?.question || '').trim();
-  const deQuestion = (q.text || '').trim();
   wrap.innerHTML = `
     <span class="en-back-label">Question</span>
-    <div class="en-back-question">EN: ${esc(enQuestion || deQuestion)}</div>
-    <div class="en-back-de">DE: ${esc(deQuestion)}</div>
+    <div class="en-back-question">${esc(enQuestion || 'English translation unavailable')}</div>
     <span class="en-back-label">Answers</span>
     <ul class="en-back-list">
       ${(q.options || []).map((opt, i) => `
         <li>
           <div class="en-back-pair">
-            <span><strong>${letters[i]}.</strong> EN: ${esc((english?.options && english.options[i]) || opt)}</span>
-            <span class="en-back-de">DE: ${esc(opt)}</span>
+            <span><strong>${letters[i]}.</strong> ${esc((english?.options && english.options[i] || '').trim() || 'English translation unavailable')}</span>
           </div>
         </li>`).join('')}
     </ul>`;
