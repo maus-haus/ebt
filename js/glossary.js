@@ -2,6 +2,40 @@
 
 export const EN_FLIP_LABEL = 'EN ⇄ DE';
 
+// Curated list of harder civic/political terms for the cheatsheet Glossar tab.
+export const GLOSSARY = [
+  { de: 'Gewaltenteilung',        en: 'separation of powers' },
+  { de: 'Rechtsstaat',            en: 'constitutional state / rule of law' },
+  { de: 'Menschenwürde',          en: 'human dignity' },
+  { de: 'Meinungsfreiheit',       en: 'freedom of speech' },
+  { de: 'Gleichberechtigung',     en: 'equal rights' },
+  { de: 'Niederlassungsfreiheit', en: 'freedom of establishment' },
+  { de: 'Legislative',            en: 'legislative branch' },
+  { de: 'Exekutive',              en: 'executive branch' },
+  { de: 'Judikative',             en: 'judicial branch' },
+  { de: 'Souveränität',           en: 'sovereignty' },
+  { de: 'Koalition',              en: 'governing coalition' },
+  { de: 'Abgeordnete',            en: 'member(s) of parliament' },
+  { de: 'Bundesrat',              en: 'Federal Council (upper house)' },
+  { de: 'Bundesverfassungsgericht', en: 'Federal Constitutional Court' },
+  { de: 'Verhältnismäßigkeit',    en: 'principle of proportionality' },
+  { de: 'Sozialversicherung',     en: 'social insurance system' },
+  { de: 'Rentenversicherung',     en: 'pension insurance' },
+  { de: 'Pflegeversicherung',     en: 'long-term care insurance' },
+  { de: 'Arbeitslosenversicherung', en: 'unemployment insurance' },
+  { de: 'Tarifvertrag',           en: 'collective agreement' },
+  { de: 'Erwerbsminderung',       en: 'reduced earning capacity' },
+  { de: 'Hinterbliebene',         en: 'surviving dependants' },
+  { de: 'Berufskrankheit',        en: 'occupational disease' },
+  { de: 'Binnenmarkt',            en: 'single market' },
+  { de: 'Freizügigkeit',          en: 'freedom of movement' },
+  { de: 'Dienstleistungsfreiheit', en: 'freedom to provide services' },
+  { de: 'Wiedervereinigung',      en: 'reunification' },
+  { de: 'Währungsreform',         en: 'currency reform' },
+  { de: 'Besatzungszone',         en: 'occupation zone' },
+  { de: 'Volksaufstand',          en: 'popular uprising' },
+];
+
 const EN_PHRASE_REPLACEMENTS = [
   [/Bild\s+([1-4])/gi, 'Image $1'],
   [/Welches ist/gi, 'Which is'],

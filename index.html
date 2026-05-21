@@ -245,6 +245,7 @@
     <button class="cheat-tab-btn"        data-tab="ct-geschichte" onclick="switchCheatTab('ct-geschichte')" role="tab" aria-selected="false" aria-controls="ct-geschichte">🔍 Geschichte</button>
     <button class="cheat-tab-btn"        data-tab="ct-geo"       onclick="switchCheatTab('ct-geo')"       role="tab" aria-selected="false" aria-controls="ct-geo">🗺️ Geografie</button>
     <button class="cheat-tab-btn"        data-tab="ct-lerntipps" onclick="switchCheatTab('ct-lerntipps')" role="tab" aria-selected="false" aria-controls="ct-lerntipps">✅ Lerntipps</button>
+    <button class="cheat-tab-btn"        data-tab="ct-glossar"   onclick="switchCheatTab('ct-glossar')"   role="tab" aria-selected="false" aria-controls="ct-glossar">📘 Glossar</button>
   </nav>
 
   <div id="ct-timeline" class="card cheat-panel" role="tabpanel">
@@ -359,6 +360,12 @@
       <li>Übe auch die <strong>länderspezifischen Fragen</strong> für dein Bundesland (3 von 33 Prüfungsfragen).</li>
       <li>Mache regelmäßig Prüfungssimulationen, um 17+ richtige Antworten sicher zu erreichen.</li>
     </ul>
+  </div>
+
+  <div id="ct-glossar" class="card cheat-panel" role="tabpanel" hidden>
+    <div class="section-title">📘 Glossar</div>
+    <p class="section-subtitle">Schwierigere Begriffe mit englischer Bedeutung.</p>
+    <div id="ct-glossar-list" class="glossar-list"></div>
   </div>
 </section>
 
