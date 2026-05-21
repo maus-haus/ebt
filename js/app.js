@@ -1,11 +1,30 @@
 // Entry point — wire up all modules
 
 import { go, initNav } from './nav.js';
-import { initPractice, setPracticeFilter, practiceNext, practiceSkip, refreshPracticeFilters } from './practice.js';
-import { initExam, startExam, examNext, examPrev, examReset } from './exam.js';
+import { initPractice, setPracticeFilter, practiceNext, practiceSkip, refreshPracticeFilters, practiceToggleEnglish } from './practice.js';
+import { initExam, startExam, examNext, examPrev, examReset, examToggleEnglish } from './exam.js';
 import { initOverview, renderOverview, buildStateSelect, changeState, confirmReset } from './overview.js';
+import { GLOSSARY } from './glossary.js';
+
+function esc(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function renderGlossary() {
+  const wrap = document.getElementById('ct-glossar-list');
+  if (!wrap || wrap._ready) return;
+  wrap._ready = true;
+  wrap.innerHTML = GLOSSARY.map(({ de, en }) =>
+    `<div class="glossar-item"><span class="glossar-de">${esc(de)}</span><span class="glossar-en">${esc(en)}</span></div>`
+  ).join('');
+}
 
 function initCheatTabs() {
+  renderGlossary();
   switchCheatTab('ct-timeline');
   const nav = document.querySelector('.cheat-tabs');
   if (nav && !nav._kbBound) {
@@ -47,10 +66,12 @@ Object.assign(window, {
   setPracticeFilter,
   practiceNext,
   practiceSkip,
+  practiceToggleEnglish,
   startExam,
   examNext,
   examPrev,
   examReset,
+  examToggleEnglish,
   changeState,
   confirmReset,
   renderOverview,

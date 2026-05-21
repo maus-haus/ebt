@@ -2,6 +2,7 @@
 
 import { S, save } from './state.js';
 import { QUESTIONS, STATE_QUESTIONS } from './data/questions.js';
+import { getEnglishSupport, EN_FLIP_LABEL } from './glossary.js';
 
 const EXAM_TOTAL = 33;
 const EXAM_GENERAL = 30;
@@ -12,6 +13,7 @@ let examDeck = [];
 let examAnswers = [];
 let examCurrent = 0;
 let examActive = false;
+let examFlipped = false;
 
 // Escape text for safe DOM insertion
 function esc(s) {
@@ -24,6 +26,45 @@ function esc(s) {
 
 function shuffle(arr) {
   return arr.slice().sort(() => Math.random() - 0.5);
+}
+
+function setExamFlip(flipped) {
+  const card = document.getElementById('eqCard');
+  const btn = document.getElementById('eqFlipBtn');
+  if (!card || !btn) return;
+  examFlipped = !!flipped;
+  card.classList.toggle('is-flipped', examFlipped);
+  btn.textContent = EN_FLIP_LABEL;
+  btn.setAttribute('aria-pressed', examFlipped ? 'true' : 'false');
+  btn.setAttribute(
+    'aria-label',
+    examFlipped ? 'Karte drehen: Deutsch anzeigen' : 'Karte drehen: Englisch anzeigen'
+  );
+}
+
+function renderExamEnglishBack(q) {
+  const wrap = document.getElementById('eqBack');
+  if (!wrap || !q) return;
+  const english = getEnglishSupport(q);
+  const letters = ['A', 'B', 'C', 'D'];
+  const enQuestion = (english?.question || '').trim();
+  wrap.innerHTML = `
+    <span class="en-back-label">Question</span>
+    <div class="en-back-question">${esc(enQuestion || 'English translation unavailable')}</div>
+    <span class="en-back-label">Answers</span>
+    <ul class="en-back-list">
+      ${(q.options || []).map((opt, i) => `
+        <li>
+          <div class="en-back-pair">
+            <span><strong>${letters[i]}.</strong> ${esc((english?.options && english.options[i] || '').trim() || 'English translation unavailable')}</span>
+          </div>
+        </li>`).join('')}
+    </ul>`;
+}
+
+export function examToggleEnglish() {
+  if (!examActive || !examDeck.length) return;
+  setExamFlip(!examFlipped);
 }
 
 export function startExam() {
@@ -65,6 +106,8 @@ function renderExamQ() {
   }
 
   document.getElementById('eqText').textContent = q.text;
+  renderExamEnglishBack(q);
+  setExamFlip(false);
   document.getElementById('eqCat').textContent = q.cat;
 
   const wrap = document.getElementById('eqOptions');
@@ -158,12 +201,19 @@ function finishExam() {
 
 export function examReset() {
   examActive = false;
+  setExamFlip(false);
   document.getElementById('examIntro').style.display = '';
   document.getElementById('examQuiz').style.display = 'none';
   document.getElementById('examResult').style.display = 'none';
 
   // Update state name in intro
   document.getElementById('examStateName').textContent = S.state;
+}
+
+export function refreshExamView() {
+  if (examActive && examDeck.length) {
+    renderExamQ();
+  }
 }
 
 export function initExam() {

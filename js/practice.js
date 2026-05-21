@@ -2,6 +2,15 @@
 
 import { S, save } from './state.js';
 import { QUESTIONS, STATE_QUESTIONS } from './data/questions.js';
+import { getEnglishSupport, EN_FLIP_LABEL } from './glossary.js';
+
+function esc(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
 
 function shuffle(arr) {
   return arr.slice().sort(() => Math.random() - 0.5);
@@ -46,6 +55,57 @@ function getQ() {
 }
 
 function totalQ() { return S.practiceDeck.length; }
+let practiceFlipped = false;
+
+function setPracticeFlip(flipped) {
+  const card = document.getElementById('pqCard');
+  const btn = document.getElementById('pqFlipBtn');
+  if (!card || !btn) return;
+  practiceFlipped = !!flipped;
+  card.classList.toggle('is-flipped', practiceFlipped);
+  btn.textContent = EN_FLIP_LABEL;
+  btn.setAttribute('aria-pressed', practiceFlipped ? 'true' : 'false');
+  btn.setAttribute(
+    'aria-label',
+    practiceFlipped ? 'Karte drehen: Deutsch anzeigen' : 'Karte drehen: Englisch anzeigen'
+  );
+}
+
+function renderPracticeEnglishBack(q) {
+  const wrap = document.getElementById('pqBack');
+  if (!wrap || !q) return;
+  const english = getEnglishSupport(q);
+  const letters = ['A', 'B', 'C', 'D'];
+  const enQuestion = (english?.question || '').trim();
+  const idx = S.practiceIdx + 1;
+  const total = totalQ();
+  const progress = ((idx - 1) / total * 100);
+  const imageBlock = q.image
+    ? `<div class="q-img-wrap"><img class="q-img" src="/images/questions/${esc(q.image)}" alt="${esc(enQuestion || q.text)}"></div>`
+    : '';
+  wrap.innerHTML = `
+    <div class="pq-header">
+      <span class="pq-counter">${idx} / ${total}</span>
+      <span class="pq-cat">${esc(q.cat)}</span>
+    </div>
+    <div class="pq-progbar"><div class="pq-progfill" style="width:${progress}%"></div></div>
+    ${imageBlock}
+    <p class="pq-text">${esc(enQuestion || 'English translation unavailable')}</p>
+    <div>
+      ${(q.options || []).map((opt, i) => `
+        <button type="button" class="opt-btn" disabled aria-disabled="true">
+          <span class="opt-letter">${letters[i]}</span>
+          <span class="opt-text">${esc((english?.options && english.options[i] || '').trim() || 'English translation unavailable')}</span>
+        </button>`).join('')}
+    </div>
+    <div class="pq-feedback"></div>`;
+}
+
+export function practiceToggleEnglish() {
+  const q = getQ();
+  if (!q) return;
+  setPracticeFlip(!practiceFlipped);
+}
 
 export function renderPractice() {
   const q = getQ();
@@ -68,6 +128,8 @@ export function renderPractice() {
 
   // Question text
   document.getElementById('pqText').textContent = q.text;
+  renderPracticeEnglishBack(q);
+  setPracticeFlip(false);
 
   // Answer options
   const optWrap = document.getElementById('pqOptions');
@@ -158,6 +220,7 @@ export function practiceSkip() {
 }
 
 function showDone() {
+  setPracticeFlip(false);
   if (S.practiceUnknownOnly) {
     const scope = S.practiceFilter === 'Alle' ? 'alle Kategorien' : `Kategorie „${S.practiceFilter}“`;
     document.getElementById('pqText').textContent = '🎉 Alle unbekannten Fragen sitzen!';

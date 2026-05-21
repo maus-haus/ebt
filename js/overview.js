@@ -2,7 +2,6 @@
 
 import { S, save, resetProgress } from './state.js';
 import { QUESTIONS, STATES } from './data/questions.js';
-import { examReset } from './exam.js';
 import { buildPracticeDeck, renderPractice } from './practice.js';
 
 export function initOverview() {

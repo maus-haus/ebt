@@ -55,6 +55,94 @@ header .de-flag{font-size:1.3rem}
   background:var(--surface);border:1px solid var(--border);
   border-radius:14px;padding:1.25rem;margin-bottom:1rem;
 }
+.q-card{
+  position:relative;
+  overflow:hidden;
+}
+.q-flip-btn{
+  position:absolute;
+  top:.8rem;
+  right:.85rem;
+  z-index:2;
+  border:1px solid rgba(167,139,250,.45);
+  background:rgba(34,34,58,.92);
+  color:var(--text);
+  border-radius:999px;
+  min-width:3.7rem;
+  height:1.95rem;
+  padding:0 .75rem;
+  font-size:.71rem;
+  letter-spacing:.02em;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 3px 10px rgba(0,0,0,.25);
+  transition:transform .15s,background .15s,border-color .15s;
+}
+.q-flip-btn:hover{
+  border-color:rgba(167,139,250,.75);
+  background:rgba(54,54,88,.95);
+}
+.q-flip-btn:active{
+  transform:translateY(1px) scale(.98);
+}
+.q-card .pq-header,
+.q-card .eq-header{
+  padding-right:4.25rem;
+}
+.q-face{
+  animation:q-flip-in .22s ease;
+}
+.q-back{display:none}
+.q-card.is-flipped .q-front{display:none}
+.q-card.is-flipped .q-back{display:block}
+.q-card.is-flipped{border-color:rgba(167,139,250,.45)}
+@keyframes q-flip-in{
+  from{opacity:.2;transform:perspective(500px) rotateY(62deg)}
+  to{opacity:1;transform:perspective(500px) rotateY(0)}
+}
+.en-back-title{
+  font-size:.95rem;
+  font-weight:700;
+  margin-bottom:.5rem;
+  padding-right:4.25rem;
+}
+.en-back-note{
+  font-size:.76rem;
+  color:var(--muted);
+  margin-bottom:.65rem;
+  line-height:1.4;
+}
+.en-back-label{
+  display:block;
+  font-size:.72rem;
+  color:var(--accent2);
+  font-weight:700;
+  margin-bottom:.2rem;
+  text-transform:uppercase;
+  letter-spacing:.03em;
+}
+.en-back-question{
+  font-size:.97rem;
+  line-height:1.55;
+  margin-bottom:.7rem;
+}
+.en-back-list{
+  margin:0;
+  padding-left:1rem;
+  display:flex;
+  flex-direction:column;
+  gap:.45rem;
+}
+.en-back-list li{line-height:1.45}
+.en-back-pair{
+  display:flex;
+  flex-direction:column;
+  gap:.15rem;
+}
+.en-back-de{
+  color:var(--muted);
+  font-size:.8rem;
+}
 
 /* ── Practice ── */
 .pq-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
@@ -188,7 +276,6 @@ header .de-flag{font-size:1.3rem}
 /* ── Section headers ── */
 .section-title{font-size:1.1rem;font-weight:700;margin-bottom:1rem}
 .section-subtitle{font-size:.85rem;color:var(--muted);margin-bottom:1rem;line-height:1.5}
-
 /* ── Misc ── */
 hr.divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
 
@@ -231,3 +318,22 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
   line-height:1.5;
 }
 .cheat-list li strong{color:var(--text)}
+
+/* ── Glossar ── */
+.glossar-list{
+  display:flex;
+  flex-direction:column;
+  gap:.4rem;
+}
+.glossar-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:1rem;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:.5rem .75rem;
+}
+.glossar-de{font-weight:600}
+.glossar-en{color:var(--muted);font-size:.88rem;text-align:right}
