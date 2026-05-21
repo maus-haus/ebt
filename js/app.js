@@ -4,28 +4,9 @@ import { go, initNav } from './nav.js';
 import { initPractice, setPracticeFilter, practiceNext, practiceSkip, refreshPracticeFilters, practiceToggleEnglish } from './practice.js';
 import { initExam, startExam, examNext, examPrev, examReset, examToggleEnglish } from './exam.js';
 import { initOverview, renderOverview, buildStateSelect, changeState, confirmReset } from './overview.js';
-import { ADVANCED_GLOSSARY } from './glossary.js';
-
-function esc(s) {
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
-function renderA1Glossary() {
-  const wrap = document.getElementById('a1GlossaryList');
-  if (!wrap || wrap._ready) return;
-  wrap._ready = true;
-  wrap.innerHTML = ADVANCED_GLOSSARY.map(item =>
-    `<div class="a1-glossary-item"><span class="a1-glossary-de">${esc(item.de)}</span><span class="a1-glossary-en">${esc(item.en)}</span></div>`
-  ).join('');
-}
 
 function initCheatTabs() {
-  renderA1Glossary();
-  switchCheatTab('ct-glossar');
+  switchCheatTab('ct-timeline');
   const nav = document.querySelector('.cheat-tabs');
   if (nav && !nav._kbBound) {
     nav._kbBound = true;
