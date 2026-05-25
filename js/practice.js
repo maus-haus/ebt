@@ -57,6 +57,13 @@ function getQ() {
 function totalQ() { return S.practiceDeck.length; }
 let practiceFlipped = false;
 
+function pruneKnownFromRemainingDeck() {
+  if (!S.practiceUnknownOnly) return;
+  const head = S.practiceDeck.slice(0, S.practiceIdx + 1);
+  const tail = S.practiceDeck.slice(S.practiceIdx + 1).filter(isUnknown);
+  S.practiceDeck = head.concat(tail);
+}
+
 function setPracticeFlip(flipped) {
   const card = document.getElementById('pqCard');
   const btn = document.getElementById('pqFlipBtn');
@@ -197,6 +204,8 @@ function selectAnswer(chosen) {
       S.practiceDeck.splice(insertAt, 0, { ...q });
     }
   }
+
+  pruneKnownFromRemainingDeck();
 
   document.getElementById('pqNextBtn').style.display = '';
 }
