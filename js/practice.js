@@ -59,9 +59,11 @@ let practiceFlipped = false;
 
 function pruneKnownFromRemainingDeck() {
   if (!S.practiceUnknownOnly) return;
-  const head = S.practiceDeck.slice(0, S.practiceIdx + 1);
-  const tail = S.practiceDeck.slice(S.practiceIdx + 1).filter(isUnknown);
-  S.practiceDeck = head.concat(tail);
+  for (let i = S.practiceDeck.length - 1; i > S.practiceIdx; i--) {
+    if (!isUnknown(S.practiceDeck[i])) {
+      S.practiceDeck.splice(i, 1);
+    }
+  }
 }
 
 function setPracticeFlip(flipped) {
