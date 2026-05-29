@@ -11,6 +11,7 @@ const PASS_SCORE = 17;
 
 let examDeck = [];
 let examAnswers = [];
+let examOptionOrders = [];
 let examCurrent = 0;
 let examActive = false;
 let examFlipped = false;
@@ -48,15 +49,16 @@ function renderExamEnglishBack(q) {
   const english = getEnglishSupport(q);
   const letters = ['A', 'B', 'C', 'D'];
   const enQuestion = (english?.question || '').trim();
+  const optOrder = examOptionOrders[examCurrent] || [0, 1, 2, 3];
   wrap.innerHTML = `
     <span class="en-back-label">Question</span>
     <div class="en-back-question">${esc(enQuestion || 'English translation unavailable')}</div>
     <span class="en-back-label">Answers</span>
     <ul class="en-back-list">
-      ${(q.options || []).map((opt, i) => `
+      ${optOrder.map((origIdx, displayIdx) => `
         <li>
           <div class="en-back-pair">
-            <span><strong>${letters[i]}.</strong> ${esc((english?.options && english.options[i] || '').trim() || 'English translation unavailable')}</span>
+            <span><strong>${letters[displayIdx]}.</strong> ${esc((english?.options && english.options[origIdx] || '').trim() || 'English translation unavailable')}</span>
           </div>
         </li>`).join('')}
     </ul>`;
@@ -76,6 +78,7 @@ export function startExam() {
 
   examDeck = shuffle([...general, ...stateQ]);
   examAnswers = new Array(examDeck.length).fill(null);
+  examOptionOrders = examDeck.map(() => shuffle([0, 1, 2, 3]));
   examCurrent = 0;
   examActive = true;
 
@@ -113,11 +116,12 @@ function renderExamQ() {
   const wrap = document.getElementById('eqOptions');
   wrap.innerHTML = '';
   const letters = ['A', 'B', 'C', 'D'];
-  q.options.forEach((opt, i) => {
+  const optOrder = examOptionOrders[examCurrent];
+  optOrder.forEach((origIdx, displayIdx) => {
     const btn = document.createElement('button');
-    btn.className = 'opt-btn' + (examAnswers[examCurrent] === i ? ' opt-selected' : '');
-    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span class="opt-text">${opt}</span>`;
-    btn.onclick = () => selectExamAnswer(i);
+    btn.className = 'opt-btn' + (examAnswers[examCurrent] === origIdx ? ' opt-selected' : '');
+    btn.innerHTML = `<span class="opt-letter">${letters[displayIdx]}</span><span class="opt-text">${q.options[origIdx]}</span>`;
+    btn.onclick = () => selectExamAnswer(origIdx);
     wrap.appendChild(btn);
   });
 
@@ -127,8 +131,9 @@ function renderExamQ() {
 
 function selectExamAnswer(chosen) {
   examAnswers[examCurrent] = chosen;
-  document.querySelectorAll('#eqOptions .opt-btn').forEach((btn, i) => {
-    btn.classList.toggle('opt-selected', i === chosen);
+  const optOrder = examOptionOrders[examCurrent];
+  document.querySelectorAll('#eqOptions .opt-btn').forEach((btn, displayIdx) => {
+    btn.classList.toggle('opt-selected', optOrder[displayIdx] === chosen);
   });
 }
 

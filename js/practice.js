@@ -56,6 +56,7 @@ function getQ() {
 
 function totalQ() { return S.practiceDeck.length; }
 let practiceFlipped = false;
+let currentOptionOrder = [0, 1, 2, 3];
 
 function setPracticeFlip(flipped) {
   const card = document.getElementById('pqCard');
@@ -92,10 +93,10 @@ function renderPracticeEnglishBack(q) {
     ${imageBlock}
     <p class="pq-text">${esc(enQuestion || 'English translation unavailable')}</p>
     <div>
-      ${(q.options || []).map((opt, i) => `
+      ${currentOptionOrder.map((origIdx, displayIdx) => `
         <button type="button" class="opt-btn" disabled aria-disabled="true">
-          <span class="opt-letter">${letters[i]}</span>
-          <span class="opt-text">${esc((english?.options && english.options[i] || '').trim() || 'English translation unavailable')}</span>
+          <span class="opt-letter">${letters[displayIdx]}</span>
+          <span class="opt-text">${esc((english?.options && english.options[origIdx] || '').trim() || 'English translation unavailable')}</span>
         </button>`).join('')}
     </div>
     <div class="pq-feedback"></div>`;
@@ -128,18 +129,19 @@ export function renderPractice() {
 
   // Question text
   document.getElementById('pqText').textContent = q.text;
+  currentOptionOrder = shuffle([0, 1, 2, 3]);
   renderPracticeEnglishBack(q);
   setPracticeFlip(false);
 
-  // Answer options
+  // Answer options (displayed in shuffled order)
   const optWrap = document.getElementById('pqOptions');
   optWrap.innerHTML = '';
   const letters = ['A', 'B', 'C', 'D'];
-  q.options.forEach((opt, i) => {
+  currentOptionOrder.forEach((origIdx, displayIdx) => {
     const btn = document.createElement('button');
     btn.className = 'opt-btn';
-    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span class="opt-text">${opt}</span>`;
-    btn.onclick = () => selectAnswer(i);
+    btn.innerHTML = `<span class="opt-letter">${letters[displayIdx]}</span><span class="opt-text">${q.options[origIdx]}</span>`;
+    btn.onclick = () => selectAnswer(displayIdx);
     optWrap.appendChild(btn);
   });
 
@@ -160,7 +162,8 @@ function selectAnswer(chosen) {
   const q = getQ();
   if (!q) return;
   const correct = q.answer;
-  const isRight = chosen === correct;
+  const origChosen = currentOptionOrder[chosen];
+  const isRight = origChosen === correct;
 
   // Track
   const qid = String(q.id);
@@ -174,10 +177,10 @@ function selectAnswer(chosen) {
   save();
   buildFilterButtons();
 
-  // Colour buttons
+  // Colour buttons (compare display index's original to correct original)
   document.querySelectorAll('.opt-btn').forEach((btn, i) => {
     btn.disabled = true;
-    if (i === correct)  btn.classList.add('opt-correct');
+    if (currentOptionOrder[i] === correct) btn.classList.add('opt-correct');
     if (i === chosen && !isRight) btn.classList.add('opt-wrong');
   });
 
