@@ -2,6 +2,50 @@
 
 export const EN_FLIP_LABEL = 'EN ⇄ DE';
 
+// Essential vocabulary table: key terms with English translation and a short meaning cue.
+export const VOCAB = [
+  { de: 'Grundgesetz',           en: 'Basic Law',                 cue: 'Germany\'s constitution' },
+  { de: 'Verfassung',            en: 'constitution',              cue: 'legal foundation of state' },
+  { de: 'Demokratie',            en: 'democracy',                 cue: 'people choose government' },
+  { de: 'Rechtsstaat',           en: 'rule of law',               cue: 'law above politicians' },
+  { de: 'Gewaltenteilung',       en: 'separation of powers',      cue: 'no single power center' },
+  { de: 'Bundestag',             en: 'federal parliament',        cue: 'makes laws' },
+  { de: 'Bundesrat',             en: 'Federal Council',           cue: 'states (Länder) representation' },
+  { de: 'Bundesregierung',       en: 'federal government',        cue: 'executive branch' },
+  { de: 'Bundeskanzler/in',      en: 'chancellor',                cue: 'head of government' },
+  { de: 'Bundespräsident/in',    en: 'federal president',         cue: 'head of state (representative)' },
+  { de: 'Bundesland / Länder',   en: 'federal state(s)',          cue: 'e.g. Berlin, Bayern' },
+  { de: 'Wahl',                  en: 'election',                  cue: 'voting process' },
+  { de: 'Bundestagswahl',        en: 'federal election',          cue: 'elect Bundestag' },
+  { de: 'wählen',                en: 'to vote',                   cue: 'core democratic right' },
+  { de: 'Mehrheit',              en: 'majority',                  cue: 'most votes' },
+  { de: 'Opposition',            en: 'opposition',                cue: 'controls/challenges government' },
+  { de: 'Koalition',             en: 'coalition',                 cue: 'parties governing together' },
+  { de: 'Partei',                en: 'political party',           cue: 'political organization' },
+  { de: 'Meinungsfreiheit',      en: 'freedom of opinion',        cue: 'can criticize government' },
+  { de: 'Pressefreiheit',        en: 'freedom of press',          cue: 'media independence' },
+  { de: 'Religionsfreiheit',     en: 'freedom of religion',       cue: 'choose religion freely' },
+  { de: 'Gleichberechtigung',    en: 'equal rights',              cue: 'equal treatment (m/f)' },
+  { de: 'Menschenwürde',         en: 'human dignity',             cue: 'top constitutional value' },
+  { de: 'Grundrechte',           en: 'fundamental rights',        cue: 'rights protected by constitution' },
+  { de: 'Pflicht',               en: 'duty / obligation',         cue: 'must do' },
+  { de: 'Recht',                 en: 'right',                     cue: 'allowed / protected' },
+  { de: 'Steuern',               en: 'taxes',                     cue: 'finance state services' },
+  { de: 'Sozialversicherung',    en: 'social insurance',          cue: 'health / pension / etc.' },
+  { de: 'Arbeitslosengeld',      en: 'unemployment benefit',      cue: 'social support' },
+  { de: 'Schulpflicht',          en: 'compulsory schooling',      cue: 'children must attend school' },
+  { de: 'Polizei',               en: 'police',                    cue: 'public safety' },
+  { de: 'Gericht',               en: 'court',                     cue: 'legal decisions' },
+  { de: 'Gesetz',                en: 'law',                       cue: 'binding rule' },
+  { de: 'Straftat',              en: 'criminal offence',          cue: 'punishable act' },
+  { de: 'Diktatur',              en: 'dictatorship',              cue: 'no free elections / rights' },
+  { de: 'Nationalsozialismus',   en: 'National Socialism',        cue: 'Nazi era' },
+  { de: 'Wiedervereinigung',     en: 'reunification',             cue: '1990 East + West Germany' },
+  { de: 'Mauerfall',             en: 'fall of the Berlin Wall',   cue: '1989 key event' },
+  { de: 'Europäische Union (EU)', en: 'European Union',           cue: 'political / economic union' },
+  { de: 'Nachbarland',           en: 'neighbouring country',      cue: 'common geography question' },
+];
+
 // Curated list of harder civic/political terms for the cheatsheet Glossar tab.
 export const GLOSSARY = [
   { de: 'Gewaltenteilung',        en: 'separation of powers' },

@@ -245,6 +245,7 @@
     <button class="cheat-tab-btn"        data-tab="ct-geschichte" onclick="switchCheatTab('ct-geschichte')" role="tab" aria-selected="false" aria-controls="ct-geschichte">🔍 Geschichte</button>
     <button class="cheat-tab-btn"        data-tab="ct-geo"       onclick="switchCheatTab('ct-geo')"       role="tab" aria-selected="false" aria-controls="ct-geo">🗺️ Geografie</button>
     <button class="cheat-tab-btn"        data-tab="ct-lerntipps" onclick="switchCheatTab('ct-lerntipps')" role="tab" aria-selected="false" aria-controls="ct-lerntipps">✅ Lerntipps</button>
+    <button class="cheat-tab-btn"        data-tab="ct-vocab"     onclick="switchCheatTab('ct-vocab')"     role="tab" aria-selected="false" aria-controls="ct-vocab">📚 Vokabular</button>
     <button class="cheat-tab-btn"        data-tab="ct-glossar"   onclick="switchCheatTab('ct-glossar')"   role="tab" aria-selected="false" aria-controls="ct-glossar">📘 Glossar</button>
   </nav>
 
@@ -360,6 +361,17 @@
       <li>Übe auch die <strong>länderspezifischen Fragen</strong> für dein Bundesland (3 von 33 Prüfungsfragen).</li>
       <li>Mache regelmäßig Prüfungssimulationen, um 17+ richtige Antworten sicher zu erreichen.</li>
     </ul>
+  </div>
+
+  <div id="ct-vocab" class="card cheat-panel" role="tabpanel" hidden>
+    <div class="section-title">📚 Vokabular</div>
+    <p class="section-subtitle">Schlüsselbegriffe mit englischer Übersetzung und Bedeutung.</p>
+    <div class="vocab-header vocab-item">
+      <span class="vocab-de vocab-col-hdr">Deutsch</span>
+      <span class="vocab-en vocab-col-hdr">English</span>
+      <span class="vocab-cue vocab-col-hdr">Meaning</span>
+    </div>
+    <div id="ct-vocab-list" class="vocab-list"></div>
   </div>
 
   <div id="ct-glossar" class="card cheat-panel" role="tabpanel" hidden>

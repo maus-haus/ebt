@@ -319,6 +319,38 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
 }
 .cheat-list li strong{color:var(--text)}
 
+/* ── Vocab table ── */
+.vocab-list{
+  display:flex;
+  flex-direction:column;
+  gap:.3rem;
+}
+.vocab-item{
+  display:grid;
+  grid-template-columns:1fr 1fr 1.3fr;
+  gap:.5rem 1rem;
+  align-items:baseline;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:.45rem .75rem;
+}
+.vocab-header{
+  background:transparent;
+  border-color:transparent;
+  padding-bottom:.2rem;
+}
+.vocab-col-hdr{
+  font-size:.72rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  color:var(--muted);
+}
+.vocab-de{font-weight:600;font-size:.9rem}
+.vocab-en{color:var(--accent2);font-size:.85rem}
+.vocab-cue{color:var(--muted);font-size:.8rem;font-style:italic}
+
 /* ── Glossar ── */
 .glossar-list{
   display:flex;
