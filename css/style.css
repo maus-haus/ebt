@@ -327,13 +327,18 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
 }
 .vocab-item{
   display:grid;
-  grid-template-columns:1fr 1fr 1.3fr;
+  grid-template-columns:minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.3fr);
   gap:.5rem 1rem;
   align-items:baseline;
   background:var(--card);
   border:1px solid var(--border);
   border-radius:10px;
   padding:.45rem .75rem;
+}
+.vocab-item > span{
+  min-width:0;
+  overflow-wrap:anywhere;
+  word-break:break-word;
 }
 .vocab-header{
   background:transparent;
@@ -350,6 +355,20 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
 .vocab-de{font-weight:600;font-size:.9rem}
 .vocab-en{color:var(--accent2);font-size:.85rem}
 .vocab-cue{color:var(--muted);font-size:.8rem;font-style:italic}
+
+@media (max-width: 640px){
+  .vocab-item{
+    grid-template-columns:minmax(0, 1fr);
+    gap:.15rem;
+  }
+  .vocab-header{
+    display:none;
+  }
+  .vocab-en,
+  .vocab-cue{
+    font-size:.78rem;
+  }
+}
 
 /* ── Glossar ── */
 .glossar-list{
