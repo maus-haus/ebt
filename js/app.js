@@ -4,7 +4,7 @@ import { go, initNav } from './nav.js';
 import { initPractice, setPracticeFilter, practiceNext, practiceSkip, refreshPracticeFilters, practiceToggleEnglish } from './practice.js';
 import { initExam, startExam, examNext, examPrev, examReset, examToggleEnglish } from './exam.js';
 import { initOverview, renderOverview, buildStateSelect, changeState, confirmReset } from './overview.js';
-import { GLOSSARY } from './glossary.js';
+import { GLOSSARY, VOCAB } from './glossary.js';
 
 function esc(s) {
   return String(s)
@@ -12,6 +12,15 @@ function esc(s) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
+}
+
+function renderVocab() {
+  const wrap = document.getElementById('ct-vocab-list');
+  if (!wrap || wrap._ready) return;
+  wrap._ready = true;
+  wrap.innerHTML = VOCAB.map(({ de, en, cue }) =>
+    `<div class="vocab-item"><span class="vocab-de">${esc(de)}</span><span class="vocab-en">${esc(en)}</span><span class="vocab-cue">${esc(cue)}</span></div>`
+  ).join('');
 }
 
 function renderGlossary() {
@@ -24,6 +33,7 @@ function renderGlossary() {
 }
 
 function initCheatTabs() {
+  renderVocab();
   renderGlossary();
   switchCheatTab('ct-timeline');
   const nav = document.querySelector('.cheat-tabs');
