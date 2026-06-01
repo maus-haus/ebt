@@ -10,7 +10,7 @@ A Progressive Web App to help prepare for the German naturalization test (**Einb
 |---|---|
 | **Practice mode** | All 300 general questions + 10 state-specific, with instant feedback |
 | **Unknown filter** | Focus on unknown cards until they are answered correctly |
-| **Category filter** | Demokratie · Geschichte · Gesellschaft · Europa · Bundesland |
+| **Category filter** | BAMF's 10 official categories (Recht, Politik, Staat, Bund und Länder, Geschichte, Gesellschaft und Familie, Wirtschaft, Religion und Kultur, Bildung und Arbeit, Europa und Welt) + Bundesland |
 | **Mock exam** | 33 random questions (30 general + 3 state), scored at the end |
 | **Cheatsheet** | Built-in timeline and key facts for quick memorization |
 | **State selector** | Choose your Bundesland in the Overview tab; persisted in localStorage |

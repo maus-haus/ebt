@@ -276,8 +276,8 @@ function buildFilterButtons() {
   unBtn.addEventListener('click', () => toggleUnknownFilter());
   wrap.appendChild(unBtn);
 
-  // Category buttons are mutually exclusive
-  const cats = ['Alle', 'Demokratie', 'Geschichte', 'Gesellschaft', 'Europa', 'Bundesland'];
+  // Category buttons are mutually exclusive — BAMF's official 10 categories
+  const cats = ['Alle', 'Recht', 'Politik', 'Staat', 'Bund und Länder', 'Geschichte', 'Gesellschaft und Familie', 'Wirtschaft', 'Religion und Kultur', 'Bildung und Arbeit', 'Europa und Welt', 'Bundesland'];
   cats.forEach(c => {
     const btn = document.createElement('button');
     btn.className = 'filter-btn' + (c === S.practiceFilter ? ' active' : '');
