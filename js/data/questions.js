@@ -502,3 +502,6 @@ export const STATE_QUESTIONS = {
     {text:"Welche Ministerin / welchen Minister hat Thüringen nicht?",options:["Justizministerin / Justizminister","Außenministerin / Außenminister","Finanzministerin / Finanzminister","Innenministerin / Innenminister"],answer:1,textEn:"Which minister does Thuringia not have?",optionsEn:["Minister of Justice","Minister of Foreign Affairs","Minister of Finance","Minister of the Interior"]}
   ]
 };
+
+export const STATES = Object.keys(STATE_QUESTIONS);
+export const CATEGORIES = ["Recht", "Politik", "Staat", "Bund und Länder", "Geschichte", "Gesellschaft und Familie", "Wirtschaft", "Religion und Kultur", "Bildung und Arbeit", "Europa und Welt", "Bundesland"];
