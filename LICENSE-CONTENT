@@ -1,0 +1,92 @@
+Content License — Creative Commons Attribution-ShareAlike 4.0 International
+(CC BY-SA 4.0)
+
+Copyright (c) 2026 Gavin D'souza
+
+This license applies to the material in this repository that its author
+actually wrote, as distinct from the software licensed under the MIT License
+in LICENSE and the official question catalogue described below.
+
+Covered (the "Content")
+-----------------------
+  * the English translations of questions and answer options (textEn,
+    optionsEn) in js/data/questions.js
+  * the mapping of questions to BAMF's ten categories, and the ordering and
+    structuring of the deck and study flow
+  * the cheatsheet and glossary text (js/glossary.js)
+  * user-interface prose, level and screen descriptions, and help copy
+  * the ballot-paper illustration (images/questions/general_130_question.svg)
+  * the image composites assembled for this project, subject to the
+    third-party credits recorded in images/Bildnachweis.md
+
+Not covered
+-----------
+  * application code, markup structure, and styles — see LICENSE (MIT)
+  * the German question and answer texts — see "Official question catalogue"
+  * question images — see "Images" below
+  * names, titles and trademarks of BAMF and the official examinations
+
+Official question catalogue
+---------------------------
+The German questions and answer options are reproduced verbatim from the
+catalogue published as Anlage 1 to the Einbürgerungstestverordnung, a
+statutory instrument (Rechtsverordnung) of the Federal Republic of Germany:
+
+  https://www.gesetze-im-internet.de/einbtestv/anlage_1.html
+
+Under §5 UrhG (amtliche Werke), official works published in the public
+interest are excluded from copyright protection. That material is therefore
+not the author's to license, and this repository grants no rights over it —
+none are needed. It may be used and redistributed freely by anyone. This
+license does not apply to it, and its presence here does not make it subject
+to the share-alike condition.
+
+Images
+------
+Every question image is listed in images/Bildnachweis.md with its source,
+author and licence. They fall into four groups:
+
+  * public domain — official coats of arms and flags (§5 UrhG), no conditions
+  * CC BY-SA 3.0 / 4.0 — attribution and share-alike, per file
+  * CC BY 4.0 — attribution only, per file
+  * CC0 — no conditions
+
+Composites containing CC BY-SA material are licensed CC BY-SA 4.0. Where a
+question originally used a copyright-protected press photograph, a freely
+licensed stand-in has been used and is identified as such in the Bildnachweis.
+
+You are free to
+---------------
+  Share  — copy and redistribute the Content in any medium or format
+  Adapt  — remix, transform, and build upon the Content for any purpose,
+           even commercially
+
+Under the following terms
+-------------------------
+  Attribution — You must give appropriate credit to Gavin D'souza and this
+    project (https://ebt.gavv.in/), provide a link to this license, and
+    indicate if changes were made. You may do so in any reasonable manner,
+    but not in any way that suggests the licensor endorses you or your use.
+    Faculty for the German question texts is not required, since they are
+    outside copyright.
+  ShareAlike — If you remix, transform, or build upon the Content, you must
+    distribute your contributions under the same license as the original.
+  No additional restrictions — You may not apply legal terms or technological
+    measures that legally restrict others from doing anything the license
+    permits.
+
+Suggested attribution line
+--------------------------
+  Translations and study material from "Einbürgerungstest – Lern-PWA" by
+  Gavin D'souza, licensed CC BY-SA 4.0 — changes were made.
+  https://ebt.gavv.in/
+
+No warranties are given. The license may not give you all of the permissions
+necessary for your intended use.
+
+Full legal text
+---------------
+The binding legal code is the CC BY-SA 4.0 legalcode at
+https://creativecommons.org/licenses/by-sa/4.0/legalcode
+A human-readable summary is at
+https://creativecommons.org/licenses/by-sa/4.0/
