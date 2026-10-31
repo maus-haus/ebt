@@ -1,4 +1,4 @@
-const CACHE = 'ebt-v5';
+const CACHE = 'ebt-v8';
 const offlineResponse = () =>
   new Response('Offline – bitte später erneut versuchen.', {
     status: 503,
@@ -18,16 +18,16 @@ const ASSETS = [
   '/js/data/questions.js',
   '/manifest.json',
   '/images/questions/general_21_question.png',
-  '/images/questions/general_55_question.jpg',
+  '/images/questions/general_55_question.png',
   '/images/questions/general_70_question.png',
-  '/images/questions/general_130_question.png',
+  '/images/questions/general_130_question.svg',
   '/images/questions/general_176_question.png',
-  '/images/questions/general_181_question.jpg',
-  '/images/questions/general_187_question.png',
+  '/images/questions/general_181_question.png',
+  '/images/questions/general_187_question.svg',
   '/images/questions/general_209_question.png',
-  '/images/questions/general_216_question.jpg',
+  '/images/questions/general_216_question.png',
   '/images/questions/general_226_question.png',
-  '/images/questions/general_235_question.jpg',
+  '/images/questions/general_235_question.png',
   '/images/questions/berlin_1_question.png',
   '/images/questions/berlin_8_question.png',
 ];
