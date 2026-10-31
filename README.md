@@ -93,9 +93,15 @@ See [NOTICE](NOTICE).
 ### Images
 
 Sources, authors and licences for every question image are recorded in
-[`images/Bildnachweis.md`](images/Bildnachweis.md). Some are public domain,
-some CC BY-SA, some CC BY, one CC0 — and three historical press photographs
-are represented by freely licensed stand-ins, all documented there.
+[`images/Bildnachweis.md`](images/Bildnachweis.md): public domain for the
+coats of arms and flag, CC BY-SA for the two base maps and the two
+photographs, and two illustrations drawn for this project.
+
+Three catalogue questions are illustrated with period press photographs that
+remain in copyright. Since no freely licensed picture of those scenes exists,
+the images were removed rather than replaced with something that would
+contradict the question text — those questions are answered from the text
+alone. The Bildnachweis records which.
 
 ### Third parties
 
